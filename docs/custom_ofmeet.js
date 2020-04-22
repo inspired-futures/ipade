@@ -1304,11 +1304,11 @@ var ofmeet = (function(of)
         return true;
     }
 
-    function broadcastBreakout(type, xmpp, json)
+    function broadcastBreakout(type, jid, xmpp, json)
     {
-        console.debug("broadcastBreakout", json);
+        console.debug("broadcastBreakout", type, jid, xmpp, json);
         const $msg = APP.connection.xmpp.connection.$msg;
-        xmpp.send($msg({type: type, to: json.jid}).c("json", {xmlns: "urn:xmpp:json:0"}).t(JSON.stringify(json)));
+        xmpp.send($msg({type: type, to: jid}).c("json", {xmlns: "urn:xmpp:json:0"}).t(JSON.stringify(json)));
     }
 
     function exitRoom(jid)
@@ -1368,7 +1368,7 @@ var ofmeet = (function(of)
                         const url = rootUrl + '/index.html?room=' + room;
 
                         json = {action: 'breakout', id: id, room: room, label: label, jid: jid, url: url, return: location.href, webinar: webinar};
-                        broadcastBreakout("chat", xmpp, json);
+                        broadcastBreakout("chat", jid, xmpp, json);
                     });
 
                     breakout.recall.push(json);
@@ -1395,7 +1395,7 @@ var ofmeet = (function(of)
 
                 setTimeout(function()
                 {
-                    broadcastBreakout("groupchat", xmpp, json);
+                    broadcastBreakout("groupchat", Strophe.getBareJidFromJid(jid), xmpp, json);
                     setTimeout(function() {exitRoom(jid)}, 5000);
 
                 }, 5000);
