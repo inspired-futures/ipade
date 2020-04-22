@@ -4,7 +4,7 @@
 ìpàdé uses static web pages hosted here on Github to run a custom version of jitsi-meet. It works with both Jitsi-Meet and Openfire Meetings hosted instances, but defaults to meet.jit.si
 
 ## Demo
-Open a browser window/tabs instances and point it at https://inspired-futures.github.io/ipade/?room=xxxx
+Open a browser window/tabs instances and point it at https://inspired-futures.github.io/ipade/index.html?room=xxxx
 
 ## Installation
 Nothing to install!. It is is serverless. Just clone this GitHub repository and enabled GitPages for the docs folder. 
