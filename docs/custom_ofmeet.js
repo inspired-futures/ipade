@@ -339,7 +339,7 @@ var ofmeet = (function(of)
         }
 
         APP.connection.xmpp.connection.addHandler(handleMucMessage, "urn:xmpp:json:0", "message");
-
+        APP.connection.xmpp.connection.addHandler(handlePresence, null, "presence");
 
         console.log("ofmeet.js setup", APP.connection, captions);
     }
@@ -1270,10 +1270,15 @@ var ofmeet = (function(of)
         }
     }
 
+    function handlePresence(presence)
+    {
+        console.debug("handlePresence", presence);
+
+        return true;
+    }
+
     function handleMucMessage(msg)
     {
-        if (breakout.kanban) return;
-
         console.debug("handleMucMessage", msg);
         const Strophe = APP.connection.xmpp.connection.Strophe;
 
@@ -1282,6 +1287,8 @@ var ofmeet = (function(of)
             console.error(msg);
             return true;
         }
+
+        if (breakout.kanban) return true;
 
         const payload = msg.querySelector('json');
 
@@ -1349,6 +1356,7 @@ var ofmeet = (function(of)
                 if (breakout.kanban.findBoard("room_" + i))
                 {
                     const items = breakout.kanban.getBoardElements("room_" + i);
+                    let json = null;
 
                     items.forEach(function(node)
                     {
@@ -1358,10 +1366,12 @@ var ofmeet = (function(of)
                         const label = node.getAttribute("data-label");
                         const jid = node.getAttribute("data-jid");
                         const url = rootUrl + '/index.html?room=' + room;
-                        const json = {action: 'breakout', id: id, room: room, label: label, jid: jid, url: url, return: location.href, webinar: webinar};
-                        breakout.recall.push(json);
+
+                        json = {action: 'breakout', id: id, room: room, label: label, jid: jid, url: url, return: location.href, webinar: webinar};
                         broadcastBreakout("chat", xmpp, json);
                     });
+
+                    breakout.recall.push(json);
                 }
             }
 
