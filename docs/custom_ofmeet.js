@@ -1386,9 +1386,9 @@ var ofmeet = (function(of)
                 setTimeout(function()
                 {
                     broadcastBreakout("groupchat", xmpp, json);
-                    setTimeout(function() {exitRoom(jid)}, 500);
+                    setTimeout(function() {exitRoom(jid)}, 5000);
 
-                }, 500);
+                }, 5000);
             }
 
             breakoutStatus("Breakout has ended");
