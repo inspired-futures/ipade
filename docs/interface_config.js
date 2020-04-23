@@ -1,6 +1,6 @@
 var interfaceConfig = {
   "ACTIVE_SPEAKER_AVATAR_SIZE": 100,
-  "APP_NAME": "Openfire Meetings",
+  "APP_NAME": "ipade",
   "BRAND_WATERMARK_LINK": "",
   "CANVAS_EXTRA": 104,
   "CANVAS_RADIUS": 7,
@@ -29,7 +29,7 @@ var interfaceConfig = {
   "OFMEET_SHOW_CAPTIONS": true,
   "OFMEET_TAG_CONFERENCE": true,
   "OFMEET_WELCOME_PAGE_CONTENT": "Integration done by Inspired Futures Ltd",
-  "OFMEET_WELCOME_PAGE_TOOLBARCONTENT": "ìpàdé",
+  "OFMEET_WELCOME_PAGE_TOOLBARCONTENT": "ipade",
   "RANDOM_AVATAR_URL_PREFIX": "",
   "RANDOM_AVATAR_URL_SUFFIX": "",
   "RECENT_LIST_ENABLED": true,
