@@ -29,6 +29,8 @@ var interfaceConfig = {
   "OFMEET_SHOW_CAPTIONS": true,
   "OFMEET_TAG_CONFERENCE": true,
   "OFMEET_WELCOME_PAGE_CONTENT": "Integration done by Inspired Futures Ltd",
+  "OFMEET_WELCOME_PAGE_TITLE": "ipade",
+  "OFMEET_WELCOME_PAGE_DESCRIPTION": "Ipade (Yoruba word for Meeting) is a web-serverless version of Openfire Meetings hosted on GitPages",
   "OFMEET_WELCOME_PAGE_TOOLBARCONTENT": "ipade",
   "RANDOM_AVATAR_URL_PREFIX": "",
   "RANDOM_AVATAR_URL_SUFFIX": "",
