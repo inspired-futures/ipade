@@ -1,68 +1,96 @@
 var config = {
   "useNicks": false,
-  "disableAudioLevels": true,
-  "useIPv6": false,
   "webrtcIceTcpDisable": false,
   "defaultSipNumber": "",
-  "startBitrate": 800,
-  "enableWelcomePage": true,
-  "useStunTurn": false,
+  "enableTcc": true,
   "enableRtpStats": true,
+  "noticeMessage": "",
   "enableRecording": false,
   "resolution": 720,
   "constraints": {"video": {
+    "width": {
+      "ideal": 1280,
+      "min": 426,
+      "max": 3840
+    },
     "aspectRatio": 16 / 9,
     "height": {
-      "ideal": 240,
-      "min": 120,
-      "max": 360
+      "ideal": 720,
+      "min": 240,
+      "max": 2160
     }
   }},
   "hiddenDomain": "recorder.meet.jit.si",
+  "videoQuality": {
+    "minHeightForQualityLvl": {
+      "720": "high",
+      "180": "low",
+      "360": "standard"
+    },
+    "maxBitratesVideo": {
+      "standard": 500000,
+      "high": 1500000,
+      "low": 200000
+    }
+  },
   "enableLipSync": false,
   "minHDHeight": 540,
-  "useRoomAsSharedDocumentName": false,
-  "recordingType": "colibri",
-  "bosh": '//meet.jit.si/http-bind',
-  "websocket": 'wss://meet.jit.si/xmpp-websocket',
+  "enableLayerSuspension": true,
+  //"websocket": "wss://meet.jit.si/xmpp-websocket/",
   "startAudioMuted": 9,
-  "openSctp": true,
-  "clientNode": "http://igniterealtime.org/ofmeet/jitsi-meet/",
-  "conferences": [],
-  "webinar": false,
   "channelLastN": -1,
-  "desktopSharingFirefoxDisabled": false,
   "adaptiveLastN": false,
   "hosts": {
     "domain": "meet.jit.si",
     "focus": "focus.meet.jit.si",
-    "muc": "conference.meet.jit.si",
-    "bridge": "jitsi-videobridge.meet.jit.si"
+    "muc": "conference.meet.jit.si"
   },
+  "testing": {
+    "capScreenshareBitrate": 1,
+    "octo": {"probability": 0}
+  },
+  "prejoinPageEnabled": false,
+  "desktopSharingChromeDisabled": false,
+  "disableAdaptiveSimulcast": true,
+  "stereo": false,
+  "enableClosePage": true,
+  "disableAudioLevels": true,
+  "useIPv6": false,
+  "startBitrate": 800,
+  "enableWelcomePage": true,
+  "maxFullResolutionParticipants": -1,
+  "useStunTurn": false,
+  "openBridgeChannel": "websocket",
+  "bosh": "https://meet.jit.si/http-bind/",
+  "enableNoAudioDetection": true,
+  "defaultLanguage": "en",
+  "useRoomAsSharedDocumentName": false,
+  "recordingType": "colibri",
+  "clientNode": "http://igniterealtime.org/ofmeet/jitsi-meet/",
+  "conferences": [],
+  "enableNoisyMicDetection": true,
+  "desktopSharingFirefoxDisabled": false,
   "logStats": false,
   "useRtcpMux": true,
   "requireDisplayName": true,
   "startVideoMuted": 9,
   "adaptiveSimulcast": false,
-  "enforcedBridge": "jitsi-videobridge.meet.jit.si",
-  "useBundle": true,
+  "ofmeetWinSSOEnabled": false,
   "p2p": {
     "disableH264": true,
     "preferH264": true,
     "useStunTurn": false,
     "enabled": true
   },
-  "desktopSharingChromeDisabled": false,
   "disableRtx": false,
-  "disableAdaptiveSimulcast": true,
   "desktopSharingChromeSources": [
     "screen",
     "window",
     "tab"
   ],
   "webrtcIceUdpDisable": false,
-  "disableSimulcast": true,
+  "disableSimulcast": false,
   "startAudioOnly": false,
-  "stereo": false,
-  "focusUserJid": "focus@meet.jit.si"
+  "focusUserJid": "focus@meet.jit.si",
+  "enableRemb": true
 };
