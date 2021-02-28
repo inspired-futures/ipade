@@ -1,7 +1,7 @@
 # ìpàdé
-Ìpàdé (Yoruba word for Meeting) is a web-serverless version of Openfire Meetings hosted on GitPages
+Ìpàdé (Yoruba word for Meeting) is a web-serverless version of Openfire Pàdé hosted on GitPages
 
-Ìpàdé uses static web pages hosted here on Github to run a custom version of jitsi-meet. It works with both Jitsi-Meet and Openfire Meetings hosted instances, but defaults to meet.jit.si
+Ìpàdé uses static web pages hosted here on Github to run a custom version of jitsi-meet. It works with both Jitsi-Meet and Openfire Meetings hosted instances, but defaults to pade.chat
 
 ## Demo
 Open a browser window/tabs instances and point it at https://inspired-futures.github.io/ipade/index.html?room=AnyRoomNameYouLike
