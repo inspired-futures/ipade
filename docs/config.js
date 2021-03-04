@@ -16,8 +16,8 @@ var config = {
     "aspectRatio": 16 / 9,
     "height": {
       "ideal": 720,
-      "min": 240,
-      "max": 2160
+      "min": 360,
+      "max": 1080
     }
   }},
   "hiddenDomain": "recorder.pade.chat",
@@ -36,7 +36,7 @@ var config = {
   "enableLipSync": false,
   "minHDHeight": 540,
   "enableLayerSuspension": true,
-  //"websocket": "wss://pade.chat:5443/ws/",
+  "websocket": "wss://pade.chat:5443/ws/",
   "startAudioMuted": 9,
   "channelLastN": -1,
   "adaptiveLastN": false,
@@ -54,7 +54,9 @@ var config = {
   "disableAdaptiveSimulcast": true,
   "stereo": false,
   "enableClosePage": true,
+  "ofmeetStreamPort": "8080",
   "disableAudioLevels": true,
+  "ofmeetStreamKey": "",
   "useIPv6": false,
   "startBitrate": 800,
   "enableWelcomePage": true,
@@ -75,11 +77,12 @@ var config = {
   "requireDisplayName": true,
   "startVideoMuted": 9,
   "adaptiveSimulcast": false,
+  "iceServers": "{'iceServers':[{'url': 'stun:jitsi.free-solutions.org:3479'},{url: 'turn:jitsi.free-solutions.org:3479', credential: 'tatafutz',username: 'turnuser'}]}",
   "ofmeetWinSSOEnabled": false,
   "p2p": {
     "disableH264": true,
     "preferH264": true,
-    "useStunTurn": false,
+    "useStunTurn": true,
     "enabled": true
   },
   "disableRtx": false,
@@ -89,8 +92,9 @@ var config = {
     "tab"
   ],
   "webrtcIceUdpDisable": false,
-  "disableSimulcast": false,
+  "disableSimulcast": true,
   "startAudioOnly": false,
+  "ofmeetLiveStream": true,
   "focusUserJid": "focus@pade.chat",
   "enableRemb": true
 };

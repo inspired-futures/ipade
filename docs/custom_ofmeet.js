@@ -271,9 +271,10 @@ var ofmeet = (function(of)
                         of.recognitionActive = false;
                         of.recognition.stop();
                     }
+					
+					if (of.recording) stopRecorder();					
                 }
 
-                if (of.recording) stopRecorder();
             });
 
             APP.conference._room.on(JitsiMeetJS.events.conference.USER_JOINED, function (id)
@@ -1664,7 +1665,6 @@ var ofmeet = (function(of)
 
         $('#ofmeet-record svg').css('fill', '#fff');
         $('#ofmeet-desktop svg').css('fill', '#fff');
-        APP.UI.messageHandler.notify("Recording", "Conference Recording Stopped");
 
         clockTrack.stop = (new Date()).getTime();
         const ids = Object.getOwnPropertyNames(recordingVideoTrack);
@@ -1674,7 +1674,14 @@ var ofmeet = (function(of)
             if (videoRecorder[id]) videoRecorder[id].stop();
         });
 
-        createVideoViewerHTML();
+        if (!config.ofmeetLiveStream)
+		{
+			createVideoViewerHTML();
+			APP.UI.messageHandler.notify("Recording", "Conference recording stopped");			
+		}
+		else {
+			APP.UI.messageHandler.notify("Streaming", "Conference streaming stopped");			
+		}
         of.recording = false;
     }
 
@@ -1919,7 +1926,7 @@ var ofmeet = (function(of)
           // If you don't want to share Audio from the desktop it should still work with just the voice.
           const source1 = context.createMediaStreamSource(desktopStream);
           const desktopGain = context.createGain();
-          desktopGain.gain.value = 0.7;
+          desktopGain.gain.value = 0.5;
           source1.connect(desktopGain).connect(destination);
           hasDesktop = true;
         }
@@ -1927,22 +1934,60 @@ var ofmeet = (function(of)
         if (voiceStream && voiceStream.getAudioTracks().length > 0) {
           const source2 = context.createMediaStreamSource(voiceStream);
           const voiceGain = context.createGain();
-          voiceGain.gain.value = 0.7;
+          voiceGain.gain.value = 0.5;
           source2.connect(voiceGain).connect(destination);
           hasVoice = true;
         }
 
         return (hasDesktop || hasVoice) ? destination.stream.getAudioTracks() : [];
     }
+	
+	function connectLiveStream (url, streamKey)
+	{
+		const ws = new WebSocket(url, [streamKey]);
+
+		ws.onopen = (event) => {
+		  console.log(`Connection opened: ${JSON.stringify(event)}`);
+		};
+
+		ws.onclose = (event) => {
+		  console.log(`Connection closed: ${JSON.stringify(event)}`);
+		};
+
+		ws.onerror = (event) => {
+		  console.log(`An error occurred with websockets: ${JSON.stringify(event)}`);
+		};
+		return ws;
+	}	
 
     function startDesktopRecorder()
     {
         console.debug("ofmeet.js startDesktopRecorder");
+		
+		const recConstraints = {video: true, audio: {autoGainControl: false, echoCancellation: false, googAutoGainControl: false, noiseSuppression: false}};
+		const streamConstraints = {video: true, audio: true};
+		
+		if (config.ofmeetLiveStream)
+		{
+			if (!config.ofmeetStreamKey || config.ofmeetStreamKey.trim() === '') 
+			{
+				config.ofmeetStreamKey = localStorage.getItem("ofmeet.live.stream.key");
+				
+				if (!config.ofmeetStreamKey || config.ofmeetStreamKey.trim() === '') 
+				{				
+					config.ofmeetStreamKey = prompt(i18n('enterStreamKey'));
 
-        navigator.mediaDevices.getDisplayMedia({video: true, audio: {autoGainControl: false, echoCancellation: false, googAutoGainControl: false, noiseSuppression: false}}).then(stream =>
+					if (!config.ofmeetStreamKey || config.ofmeetStreamKey.trim() === '')
+						config.ofmeetLiveStream = false;
+					else
+						localStorage.setItem("ofmeet.live.stream.key", config.ofmeetStreamKey);							
+				}
+			}
+		}			
+		
+        navigator.mediaDevices.getDisplayMedia(config.ofmeetLiveStream ? streamConstraints : recConstraints).then(stream =>
         {
             $('#ofmeet-desktop svg').css('fill', '#f00');
-            APP.UI.messageHandler.notify("Recording", "Conference Recording Started");
 
             captions.msgs = [];
             clockTrack.start = (new Date()).getTime();
@@ -1955,60 +2000,84 @@ var ofmeet = (function(of)
 
             console.log('ofmeet.js startDesktopRecorder tracks', tracks);
             recorderStreams[id] =  new MediaStream(tracks);
-            filenames[id] = getFilename("ofmeet-video-" + id, ".webm");
+			
+			if (config.ofmeetLiveStream && APP.conference._room.isModerator())
+			{
+				let websocket = connectLiveStream("wss://" + location.host + "/livestream-ws/", config.ofmeetStreamKey);
+				videoRecorder[id] = new MediaRecorder(recorderStreams[id], {mimeType: 'video/webm;codecs=h264', bitsPerSecond: 256 * 8 * 1024});
 
-            console.debug("ofmeet.js startDesktopRecorder stream", id, recorderStreams[id], recorderStreams[id].getVideoTracks()[0].getSettings());
-            const dbname = 'ofmeet-db-' + id;
-            dbnames.push(dbname);
+				videoRecorder[id].ondataavailable = function(e)
+				{
+					websocket.send(e.data);
+				}
 
-            customStore[id] = new idbKeyval.Store(dbname, dbname);
-            videoRecorder[id] = new MediaRecorder(recorderStreams[id], { mimeType: 'video/webm'});
+				videoRecorder[id].onstop = function(e)
+				{
+					websocket.close();
+					websocket = null;
+				}	
 
-            videoRecorder[id].ondataavailable = function(e)
-            {
-                if (e.data.size > 0)
-                {
-                    const key = "video-chunk-" + (new Date()).getTime();
+				APP.UI.messageHandler.notify("Streaming", "Conference streaming started");
+				
+			} else {
+				filenames[id] = getFilename("ofmeet-video-" + id, ".webm");
 
-                    idbKeyval.set(key, e.data, customStore[id]).then(function()
-                    {
-                        console.debug("ofmeet.js startDesktopRecorder - ondataavailable", id, key, e.data);
+				console.debug("ofmeet.js startDesktopRecorder stream", id, recorderStreams[id], recorderStreams[id].getVideoTracks()[0].getSettings());
+				const dbname = 'ofmeet-db-' + id;
+				dbnames.push(dbname);
 
-                    }).catch(function(err) {
-                        console.error('ofmeet.js startDesktopRecorder - ondataavailable failed!', err)
-                    });
-                }
-            }
+				customStore[id] = new idbKeyval.Store(dbname, dbname);
+				videoRecorder[id] = new MediaRecorder(recorderStreams[id], { mimeType: 'video/webm'});
 
-            videoRecorder[id].onstop = function(e)
-            {
-                recorderStreams[id].getTracks().forEach(track => track.stop());
-                stream.getTracks().forEach(track => track.stop());
+				videoRecorder[id].ondataavailable = function(e)
+				{
+					if (e.data.size > 0)
+					{
+						const key = "video-chunk-" + (new Date()).getTime();
 
-                idbKeyval.keys(customStore[id]).then(function(data)
-                {
-                    const duration = Date.now() - startTime;
-                    const blob = new Blob(data, {type: 'video/webm'});
+						idbKeyval.set(key, e.data, customStore[id]).then(function()
+						{
+							console.debug("ofmeet.js startDesktopRecorder - ondataavailable", id, key, e.data);
 
-                   console.debug("ofmeet.js startDesktopRecorder - onstop", id, filenames[id], duration, data, blob);
+						}).catch(function(err) {
+							console.error('ofmeet.js startDesktopRecorder - ondataavailable failed!', err)
+						});
+					}
+				}
 
-                    ysFixWebmDuration(blob, duration, function(fixedBlob) {
-                        createAnchor(filenames[id], fixedBlob);
-                        idbKeyval.clear(customStore[id]);
+				videoRecorder[id].onstop = function(e)
+				{
+					recorderStreams[id].getTracks().forEach(track => track.stop());
+					stream.getTracks().forEach(track => track.stop());
 
-                        delete filenames[id];
-                        delete videoRecorder[id];
-                        delete recorderStreams[id];
-                        delete customStore[id];
-                    });
-                });
-            }
+					idbKeyval.keys(customStore[id]).then(function(data)
+					{
+						const duration = Date.now() - startTime;
+						const blob = new Blob(data, {type: 'video/webm'});
+
+					   console.debug("ofmeet.js startDesktopRecorder - onstop", id, filenames[id], duration, data, blob);
+
+						ysFixWebmDuration(blob, duration, function(fixedBlob) {
+							createAnchor(filenames[id], fixedBlob);
+							idbKeyval.clear(customStore[id]);
+
+							delete filenames[id];
+							delete videoRecorder[id];
+							delete recorderStreams[id];
+							delete customStore[id];
+						});
+					});
+				}
+				
+				APP.UI.messageHandler.notify("Recording", "Conference recording started");				
+			}
             videoRecorder[id].start(1000);
             const startTime = Date.now();
             of.recording = true;
 
         }, error => {
             console.error("ofmeet.js startDesktopRecorder", error);
+            APP.UI.messageHandler.showError({title:"Desktop recorder/streamer", error, hideErrorSupportLink: true});			
             of.recording = false;
         });
     }
