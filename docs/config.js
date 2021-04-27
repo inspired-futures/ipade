@@ -77,8 +77,6 @@ var config = {
   "requireDisplayName": true,
   "startVideoMuted": 9,
   "adaptiveSimulcast": false,
-  "iceServers": "{'iceServers':[{'url': 'stun:jitsi.free-solutions.org:3479'},{url: 'turn:jitsi.free-solutions.org:3479', credential: 'tatafutz',username: 'turnuser'}]}",
-  "ofmeetWinSSOEnabled": false,
   "p2p": {
     "disableH264": true,
     "preferH264": true,
@@ -94,7 +92,7 @@ var config = {
   "webrtcIceUdpDisable": false,
   "disableSimulcast": true,
   "startAudioOnly": false,
-  "ofmeetLiveStream": true,
+  "ofmeetLiveStream": false,
   "focusUserJid": "focus@pade.chat",
   "enableRemb": true
 };
