@@ -275,9 +275,6 @@ class Context_Context {
         this._sendCount = BigInt(0); // eslint-disable-line new-cap
 
         this._id = id;
-
-        this._signatureKey = null;
-        this._signatureOptions = null;
     }
 
     /**
@@ -304,39 +301,16 @@ class Context_Context {
      * Sets a set of keys and resets the sendCount.
      * decryption.
      * @param {Object} keys set of keys.
+     * @param {Number} keyIndex optional
      * @private
      */
-    _setKeys(keys) {
-        this._cryptoKeyRing[this._currentKeyIndex] = keys;
-        this._sendCount = BigInt(0); // eslint-disable-line new-cap
-    }
-
-    /**
-     * Sets the public or private key used to sign or verify frames.
-     * @param {CryptoKey} public or private CryptoKey object.
-     * @param {Object} signature options. Will be passed to sign/verify and need to specify byteLength of the signature.
-     *  Defaults to ECDSA with SHA-256 and a byteLength of 132.
-     */
-    setSignatureKey(key, options = {
-        name: 'ECDSA',
-        hash: { name: 'SHA-256' },
-        byteLength: 132 // Length of the signature.
-    }) {
-        this._signatureKey = key;
-        this._signatureOptions = options;
-    }
-
-    /**
-     * Decide whether we should sign a frame.
-     * @returns {boolean}
-     * @private
-     */
-    _shouldSignFrame() {
-        if (!this._signatureKey) {
-            return false;
+    _setKeys(keys, keyIndex = -1) {
+        if (keyIndex >= 0) {
+            this._cryptoKeyRing[keyIndex] = keys;
+        } else {
+            this._cryptoKeyRing[this._currentKeyIndex] = keys;
         }
-
-        return true;
+        this._sendCount = BigInt(0); // eslint-disable-line new-cap
     }
 
     /**
@@ -389,12 +363,7 @@ class Context_Context {
                 }
             }
 
-
-            // If a signature is included, the S bit is set and a fixed number
-            // of bytes (depending on the signature algorithm) is inserted between
-            // CTR and the trailing byte.
-            const signatureLength = this._shouldSignFrame(encodedFrame) ? this._signatureOptions.byteLength : 0;
-            const frameTrailer = new Uint8Array(counterLength + signatureLength + 1);
+            const frameTrailer = new Uint8Array(counterLength + 1);
 
             frameTrailer.set(new Uint8Array(counter.buffer, counter.byteLength - counterLength));
 
@@ -402,9 +371,6 @@ class Context_Context {
             // This is different from the sframe draft, increases the key space and lets us
             // ignore the case of a zero-length counter at the receiver.
             frameTrailer[frameTrailer.byteLength - 1] = keyIndex | ((counterLength - 1) << 4);
-            if (signatureLength) {
-                frameTrailer[frameTrailer.byteLength - 1] |= 0x80; // set the signature bit.
-            }
 
             // XOR the counter with the saltKey to construct the AES CTR.
             const saltKey = new DataView(this._cryptoKeyRing[keyIndex].saltKey);
@@ -439,13 +405,6 @@ class Context_Context {
                     // Set the truncated authentication tag.
                     newUint8.set(truncatedAuthTag, UNENCRYPTED_BYTES[encodedFrame.type] + cipherText.byteLength);
 
-                    // Sign with the long-term signature key.
-                    if (signatureLength) {
-                        const signature = await crypto.subtle.sign(this._signatureOptions,
-                            this._signatureKey, truncatedAuthTag);
-
-                        newUint8.set(new Uint8Array(signature), newUint8.byteLength - signature.byteLength - 1);
-                    }
                     encodedFrame.data = newData;
 
                     return controller.enqueue(encodedFrame);
@@ -475,44 +434,19 @@ class Context_Context {
         const data = new Uint8Array(encodedFrame.data);
         const keyIndex = data[encodedFrame.data.byteLength - 1] & 0xf; // lower four bits.
 
-        if (this._cryptoKeyRing[keyIndex]) {
+        if (this._cryptoKeyRing[this._currentKeyIndex] && this._cryptoKeyRing[keyIndex]) {
             const counterLength = 1 + ((data[encodedFrame.data.byteLength - 1] >> 4) & 0x7);
-            const signatureLength = data[encodedFrame.data.byteLength - 1] & 0x80
-                ? this._signatureOptions.byteLength : 0;
             const frameHeader = new Uint8Array(encodedFrame.data, 0, UNENCRYPTED_BYTES[encodedFrame.type]);
 
             // Extract the truncated authentication tag.
             const authTagOffset = encodedFrame.data.byteLength - (DIGEST_LENGTH[encodedFrame.type]
-                + counterLength + signatureLength + 1);
+                + counterLength + 1);
             const authTag = encodedFrame.data.slice(authTagOffset, authTagOffset
                 + DIGEST_LENGTH[encodedFrame.type]);
 
-            // Verify the long-term signature of the authentication tag.
-            if (signatureLength) {
-                if (this._signatureKey) {
-                    const signature = data.subarray(data.byteLength - signatureLength - 1, data.byteLength - 1);
-                    const validSignature = await crypto.subtle.verify(this._signatureOptions,
-                            this._signatureKey, signature, authTag);
-
-                    if (!validSignature) {
-                        // TODO: surface this to the app. We are encrypted but validation failed.
-                        console.error('Long-term signature mismatch (or no signature key)');
-
-                        return;
-                    }
-
-                    // TODO: surface this to the app. We are now encrypted and verified.
-                } else {
-                    // TODO: surface this to the app. We are now encrypted but can not verify.
-                }
-
-                // Then set signature bytes to 0.
-                data.set(new Uint8Array(signatureLength), encodedFrame.data.byteLength - (signatureLength + 1));
-            }
-
             // Set authentication tag bytes to 0.
             data.set(new Uint8Array(DIGEST_LENGTH[encodedFrame.type]), encodedFrame.data.byteLength
-                - (DIGEST_LENGTH[encodedFrame.type] + counterLength + signatureLength + 1));
+                - (DIGEST_LENGTH[encodedFrame.type] + counterLength + 1));
 
             // Do truncated hash comparison of the authentication tag.
             // If the hash does not match we might have to advance the ratchet a limited number
@@ -530,7 +464,7 @@ class Context_Context {
                         new Uint8Array(calculatedTag.slice(0, DIGEST_LENGTH[encodedFrame.type])))) {
                     validAuthTag = true;
                     if (distance > 0) {
-                        this._setKeys(newKeys);
+                        this._setKeys(newKeys, keyIndex);
                     }
                     break;
                 }
@@ -553,8 +487,8 @@ class Context_Context {
             // Extract the counter.
             const counter = new Uint8Array(16);
 
-            counter.set(data.slice(encodedFrame.data.byteLength - (counterLength + signatureLength + 1),
-                encodedFrame.data.byteLength - (signatureLength + 1)), 16 - counterLength);
+            counter.set(data.slice(encodedFrame.data.byteLength - (counterLength + 1),
+                encodedFrame.data.byteLength - 1), 16 - counterLength);
             const counterView = new DataView(counter.buffer);
 
             // XOR the counter with the saltKey to construct the AES CTR.
@@ -572,7 +506,7 @@ class Context_Context {
             }, this._cryptoKeyRing[keyIndex].encryptionKey, new Uint8Array(encodedFrame.data,
                     UNENCRYPTED_BYTES[encodedFrame.type],
                     encodedFrame.data.byteLength - (UNENCRYPTED_BYTES[encodedFrame.type]
-                    + DIGEST_LENGTH[encodedFrame.type] + counterLength + signatureLength + 1))
+                    + DIGEST_LENGTH[encodedFrame.type] + counterLength + 1))
             ).then(plainText => {
                 const newData = new ArrayBuffer(UNENCRYPTED_BYTES[encodedFrame.type] + plainText.byteLength);
                 const newUint8 = new Uint8Array(newData);
@@ -597,12 +531,6 @@ class Context_Context {
                     controller.enqueue(encodedFrame);
                 }
             });
-        } else if (keyIndex >= this._cryptoKeyRing.length && this._cryptoKeyRing[this._currentKeyIndex]) {
-            // If we are encrypting but don't have a key for the remote drop the frame.
-            // This is a heuristic since we don't know whether a packet is encrypted,
-            // do not have a checksum and do not have signaling for whether a remote participant does
-            // encrypt or not.
-            return;
         }
 
         // TODO: this just passes through to the decoder. Is that ok? If we don't know the key yet
@@ -672,16 +600,6 @@ onmessage = async event => {
         } else {
             context.setKey(false, keyIndex);
         }
-    } else if (operation === 'setSignatureKey') {
-        const { participantId, key, signatureOptions } = event.data;
-
-        if (!contexts.has(participantId)) {
-            contexts.set(participantId, new Context_Context(participantId));
-        }
-        const context = contexts.get(participantId);
-
-        context.setSignatureKey(key, signatureOptions);
-
     } else if (operation === 'cleanup') {
         const { participantId } = event.data;
 

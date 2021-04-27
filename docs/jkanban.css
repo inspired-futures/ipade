@@ -17,7 +17,8 @@
 .kanban-board {
   position: relative;
   float: left;
-  background: #e2e4e6;
+  background: rgb(66, 82, 110);
+  border-radius: 3px;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -62,10 +63,13 @@
 }
 
 .kanban-item {
-  background: #fff;
-  padding: 15px;
-  margin-bottom: 20px;
+  background: rgba(13, 20, 36, 0.63);
+  padding: 10px;
+  margin-bottom: 10px;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
 }
 
 .kanban-item:hover {
@@ -77,9 +81,28 @@
 }
 
 .kanban-item.is-moving.gu-mirror {
-  transform: rotate(3deg);
   height: auto !important;
 }
+
+.kanban-item .header-icon {
+  padding-right: 10px;
+}
+
+.kanban-item .header-icon .avatar {
+  font-size: 12px;
+  height: 24px;
+  width: 24px;
+}
+
+.kanban-item.disabled-item {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.kanban-item.disabled-item:hover {
+  cursor: default;
+}
+
 
 /* Dragula CSS  */
 .gu-mirror {
@@ -105,14 +128,14 @@
 }
 
 .drag_handler {
-    background: #fff;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    position: relative;
-    float: left;
-    top: -3px;
-    margin-right: 4px;
+  background: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  float: left;
+  top: -3px;
+  margin-right: 4px;
 }
 
 .drag_handler:hover {
@@ -120,30 +143,30 @@
 }
 
 .drag_handler_icon {
-    position: relative;
-    display: block;
-    background: #000;
-    width: 24px;
-    height: 2px;
-    top: 12px;
-    transition: .5s ease-in-out;
+  position: relative;
+  display: block;
+  background: #000;
+  width: 24px;
+  height: 2px;
+  top: 12px;
+  transition: .5s ease-in-out;
 }
 
 .drag_handler_icon:before,
 .drag_handler_icon:after {
-    background: #000;
-    content: '';
-    display: block;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    transition: .5s ease-in-out;
+  background: #000;
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transition: .5s ease-in-out;
 }
 
- .drag_handler_icon:before {
-    top: 6px;
+.drag_handler_icon:before {
+  top: 6px;
 }
 
 .drag_handler_icon:after {
-    bottom: 6px;
+  bottom: 6px;
 }
