@@ -1,5 +1,6 @@
 var interfaceConfig = {
   "ACTIVE_SPEAKER_AVATAR_SIZE": 100,
+  "OFMEET_CONTACTS_MGR": true,  
   "OFMEET_CACHE_PASSWORD": true,
   "OFMEET_ALLOW_UPLOADS": true,
   "SHOW_POWERED_BY": false,
