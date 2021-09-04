@@ -20,7 +20,7 @@ var config = {
       "max": 1080
     }
   }},
-  "hiddenDomain": "recorder.pade.chat",
+  "hiddenDomain": "recorder.18.224.82.101",
   "videoQuality": {
     "minHeightForQualityLvl": {
       "720": "high",
@@ -36,14 +36,14 @@ var config = {
   "enableLipSync": false,
   "minHDHeight": 540,
   "enableLayerSuspension": true,
-  "websocket": "wss://pade.chat:5443/ws/",
+  "websocket": "wss://18.224.82.101:5443/ws/",
   "startAudioMuted": 9,
   "channelLastN": -1,
   "adaptiveLastN": false,
   "hosts": {
-    "domain": "pade.chat",
-    "focus": "focus.pade.chat",
-    "muc": "conference.pade.chat"
+    "domain": "18.224.82.101",
+    "focus": "focus.18.224.82.101",
+    "muc": "conference.18.224.82.101"
   },
   "testing": {
     "capScreenshareBitrate": 1,
@@ -63,7 +63,7 @@ var config = {
   "maxFullResolutionParticipants": -1,
   "useStunTurn": false,
   "openBridgeChannel": "websocket",
-  "bosh": "https://pade.chat:5443/http-bind/",
+  "bosh": "https://18.224.82.101:5443/http-bind/",
   "enableNoAudioDetection": true,
   "defaultLanguage": "en",
   "useRoomAsSharedDocumentName": false,
@@ -93,6 +93,6 @@ var config = {
   "disableSimulcast": true,
   "startAudioOnly": false,
   "ofmeetLiveStream": false,
-  "focusUserJid": "focus@pade.chat",
+  "focusUserJid": "focus@18.224.82.101",
   "enableRemb": true
 };
