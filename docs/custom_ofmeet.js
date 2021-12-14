@@ -22,6 +22,7 @@ var ofmeet = (function (ofm) {
         photo: '<svg width="24" height="24" viewBox="0 0 32 32"><path d="M6.667 5.667h-4V4.333h4v1.334zm10.666 6.666c-2.205 0-4 1.795-4 4 0 2.206 1.795 4 4 4 2.206 0 4-1.794 4-4 0-2.205-1.794-4-4-4zM32 7v20H0V7h7.907c.892 0 1.724-.445 2.218-1.188L12 3h10.667l1.874 2.812A2.665 2.665 0 0026.76 7H32zM6.667 12.333a1.333 1.333 0 10-2.667 0 1.333 1.333 0 102.667 0zm17.333 4c-.001-5.132-5.557-8.339-10.002-5.773a6.67 6.67 0 00-3.333 5.775c.001 5.132 5.557 8.339 10.002 5.773A6.668 6.668 0 0024 16.333z"/></svg>',
         desktop: '<svg width="24" height="24" viewBox="0 0 32 32"><path d="M30 2H2a2 2 0 00-2 2v18a2 2 0 002 2h9.998c-.004 1.446-.062 3.324-.61 4h-.404A.992.992 0 0010 29c0 .552.44 1 .984 1h10.03A.992.992 0 0022 29c0-.552-.44-1-.984-1h-.404c-.55-.676-.606-2.554-.61-4H30a2 2 0 002-2V4a2 2 0 00-2-2zM14 24l-.002.004L14 24zm4.002.004L18 24h.002v.004zM30 20H2V4h28v16z"/><path d="M19.231 11.918a3.305 3.305 0 01-3.305 3.305 3.305 3.305 0 01-3.305-3.305 3.305 3.305 0 013.305-3.305 3.305 3.305 0 013.305 3.305z"/><path d="M16 5.33A6.677 6.677 0 009.33 12 6.677 6.677 0 0016 18.67 6.677 6.677 0 0022.67 12 6.677 6.677 0 0016 5.33zm0 1A5.662 5.662 0 0121.67 12 5.662 5.662 0 0116 17.67 5.662 5.662 0 0110.33 12 5.662 5.662 0 0116 6.33z"/></svg>',
         picture: '<svg width="24" height="24" viewBox="0 0 32 32"><path d="M17.228 11.688a2.782 2.782 1080 105.564 0 2.782 2.782 1080 10-5.564 0zM26 28h2V16l-8 6-10-8-6 6v8h2zm4-24H2a2 2 0 00-2 2v24a2 2 0 002 2h28a2 2 0 002-2V6a2 2 0 00-2-2zm0 26H2V6h28v24z"/></svg>',
+        avatar: '<svg width="24" height="24" viewBox="0 0 489 489"><path d="M417.4,71.6C371.2,25.4,309.8,0,244.5,0S117.8,25.4,71.6,71.6S0,179.2,0,244.5s25.4,126.7,71.6,172.9S179.2,489,244.5,489 s126.7-25.4,172.9-71.6S489,309.8,489,244.5S463.6,117.8,417.4,71.6z M244.5,462C124.6,462,27,364.4,27,244.5S124.6,27,244.5,27 S462,124.6,462,244.5S364.4,462,244.5,462z"/><path d="M244.5,203.2c35.1,0,63.6-28.6,63.6-63.6s-28.5-63.7-63.6-63.7s-63.6,28.6-63.6,63.6S209.4,203.2,244.5,203.2z M244.5,102.9c20.2,0,36.6,16.4,36.6,36.6s-16.4,36.6-36.6,36.6s-36.6-16.4-36.6-36.6S224.3,102.9,244.5,102.9z"/><path d="M340.9,280.5c-22.3-32.8-54.7-49.5-96.4-49.5s-74.1,16.6-96.4,49.5c-16.6,24.4-27.2,57.7-31.4,98.7 c-0.8,7.4,4.6,14.1,12,14.8c7.4,0.8,14.1-4.6,14.8-12c8.5-82.3,42.5-124,101-124s92.5,41.7,101,124c0.7,6.9,6.6,12.1,13.4,12.1 c0.5,0,0.9,0,1.4-0.1c7.4-0.8,12.8-7.4,12-14.8C368.1,338.1,357.5,304.9,340.9,280.5z"/></svg>',
         deleteAvatar: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M3.034 21.713a2.241 2.241 0 002.242 2.241h13.449a2.24 2.24 0 002.24-2.241V6.022H3.034zM15.736 9.758a.747.747 0 011.494 0v10.461a.747.747 0 01-1.494 0zm-4.483 0a.747.747 0 011.493 0v10.461a.746.746 0 11-1.493 0zm-4.483 0a.747.747 0 011.494 0v10.461a.747.747 0 11-1.494 0zM21.713 1.54h-5.604l-.438-.872a1.122 1.122 0 00-1.005-.622H9.328a1.104 1.104 0 00-.998.622l-.44.872H2.288a.748.748 0 00-.748.747v1.495c0 .412.335.747.748.747h19.425a.748.748 0 00.747-.747V2.287a.748.748 0 00-.747-.747z"/></svg>',
         changeColor: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M11.998.078C5.415.078.076 5.415.076 12c0 6.586 5.339 11.922 11.922 11.922 6.586.003 11.925-5.336 11.925-11.922 0-6.585-5.339-11.922-11.925-11.922zm-1.256 2.574h2.524l6.266 16.441H17.22l-1.499-4.218h-7.41l-1.498 4.218H4.466l6.276-16.441zm1.256 2.191L8.98 13.025h6.047l-3.029-8.182z"/></svg>',
         cursor: '<svg width="24" height="24" viewBox="0 0 32 32"><path d="M26.56 21.272a.998.998 0 00-.098-1.15L9.828.356A1.001 1.001 0 008.062 1v26.094a1 1 0 001.802.596l4.472-6.024 3.102 8.874a2.18 2.18 0 004.116-1.44l-3.044-8.706 6.996 1.354a.998.998 0 001.054-.476z"/></svg>',
@@ -152,37 +153,39 @@ var ofmeet = (function (ofm) {
                         if (user.indexOf('@') == -1) {
                             user += '@' + config.hosts["domain"];
                         }
-                        storage.setItem("xmpp_username_override", user);
-                        storage.setItem("xmpp_password_override", credential.password);
+						// BAO
+                        //storage.setItem("xmpp_username_override", user);
+                        //storage.setItem("xmpp_password_override", credential.password);
+                        console.debug("credentials passed to local store");
                     }
                 }).catch(function (err) {
                     console.error("credential management api get error", err);
                 });
             }
+
         } else {
             storage = new DummyStorage();
         }
-        
-        if (!config.webinar) {
-            if (typeof indexedDB.databases == "function") {
-                indexedDB.databases().then(function (databases) {
-                    console.debug("custom_ofmeet.js found databases", databases);
 
-                    databases.forEach(function (db) {
-                        if (db.name.indexOf("ofmeet-db-") > -1) recoverRecording(db.name);
-                    })
-                })
-            }
-            if (window.webkitSpeechRecognition && !isElectron()) setupVoiceCommand()
-        }
+		if (typeof indexedDB.databases == "function") {
+			indexedDB.databases().then(function (databases) {
+				console.debug("custom_ofmeet.js found databases", databases);
 
-        setTimeout(setup);
+				databases.forEach(function (db) {
+					if (db.name.indexOf("ofmeet-db-") > -1) recoverRecording(db.name);
+				})
+			})
+		}
+		if (window.webkitSpeechRecognition && !isElectron()) setupVoiceCommand()
+
+
+        setTimeout(preSetup);
     });
 
     window.addEventListener("beforeunload", function (event) {
         console.debug("custom_ofmeet.js beforeunload");
 
-        if (APP.connection && !config.webinar) {
+        if (APP.connection) {
             if (dbnames.length > 0 || ofm.recording) {
                 event.preventDefault();
                 event.returnValue = '';
@@ -234,6 +237,12 @@ var ofmeet = (function (ofm) {
     //  setup
     //
     //-------------------------------------------------------
+
+	function mobileCheck() {
+	  let check = false;
+	  (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
+	  return check;
+	}
 
     function parseHashParams() {
         const hash = location.hash.replace(/^#/, '');
@@ -311,179 +320,210 @@ var ofmeet = (function (ofm) {
             enter_room_button.parentNode.appendChild(button);
         }
     }
-
-    function setup() {
-        if (!APP.connection || !APP.conference || !APP.conference.isJoined()) {
-            setTimeout(setup, 100);
+	
+    function preSetup() {
+        if (!APP.connection) {
+            setTimeout(preSetup);
             return;
         }
 
-        console.debug("custom_ofmeet.js setup");
+        console.debug("custom_ofmeet.js pre-setup");		
+		setup();	
+	}	
 
-        if (!config.webinar) {
-            const room = getConference();
-
-            listenWebPushEvents();
-
-            if (hashParams.subject) {
-                setConferenceName(hashParams.subject);
-            }
-
-            breakoutClient = new BreakoutClient();
-
-            room.on(JitsiMeetJS.events.conference.CONFERENCE_LEFT, function () {
-                console.debug("custom_ofmeet.js me left");
-
-                if (interfaceConfig.OFMEET_RECORD_CONFERENCE) {
-                    if (ofm.recording) stopRecorder();
-
-                    const ids = Object.getOwnPropertyNames(recordingVideoTrack);
-
-                    ids.forEach(function (id) {
-                        delete recordingAudioTrack[id];
-                        delete recordingVideoTrack[id];
-                    });
-                }
-            });
-
-            room.on(JitsiMeetJS.events.conference.USER_ROLE_CHANGED, function (user, role) {
-                console.debug("custom_ofmeet.js participant role change", user, role);
-
-                if (interfaceConfig.OFMEET_ENABLE_BREAKOUT &&
-                    role == "moderator" &&
-                    user == APP.conference.getMyUserId() &&
-                    breakoutClient.state != BreakoutState.STARTED) {
-                    $('#ofmeet-breakout').parent().show();
-                }
-            });
-
-            room.on(JitsiMeetJS.events.conference.TRACK_REMOVED, function (track) {
-                console.debug("custom_ofmeet.js track removed", track.getParticipantId());
-
-                if (track.getParticipantId() == APP.conference.getMyUserId()) {
-                    clockTrack.leaves = (new Date()).getTime();
-                    hideClock();
-
-                    if (ofm.recognition) {
-                        ofm.recognitionActive = false;
-                        ofm.recognition.stop();
-                    }
-
-                    if (ofm.recording) stopRecorder();
-                }
-            });
-
-            room.on(JitsiMeetJS.events.conference.USER_JOINED, function (id) {
-                console.debug("user join", id, participants);
-                addParticipant(id);
-            });
-
-            room.on(JitsiMeetJS.events.conference.USER_LEFT, function (id) {
-                console.debug("user left", id);
-                removeParticipant(id);
-            });
-
-            room.on(JitsiMeetJS.events.conference.TRACK_ADDED, function (track) {
-                const id = track.getParticipantId();
-                console.debug("custom_ofmeet.js track added", id, track.getType());
-
-                if (interfaceConfig.OFMEET_RECORD_CONFERENCE) {
-                    if (track.getType() == "audio") recordingAudioTrack[id] = track.stream;
-                    if (track.getType() == "video") recordingVideoTrack[id] = track.stream;
-                }
-            });
-
-            room.on(JitsiMeetJS.events.conference.PARTICIPANT_PROPERTY_CHANGED, function (participant, property, oldValue, newValue) {
-                console.debug("custom_ofmeet.js property changed", participant, property, oldValue, newValue);
-
-                if (property == 'mainRoomUserId') {
-                    if (breakoutHost) {
-                        breakoutHost.recallParticipant(participant._id, newValue);
-                    }
-                }
-            });
-
-            room.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, function (track) {
-                const id = track.getParticipantId();
-                console.debug("custom_ofmeet.js track muted", id, track.getType(), track.isMuted());
-
-                if (interfaceConfig.OFMEET_RECORD_CONFERENCE) {
-                    if (track.getType() == "audio" && recordingAudioTrack[id]) recordingAudioTrack[id].getAudioTracks()[0].enabled = !track.isMuted();
-                    if (track.getType() == "video" && recordingVideoTrack[id]) recordingVideoTrack[id].getVideoTracks()[0].enabled = !track.isMuted();
-
-                    const recordingStream = recorderStreams[id];
-
-                    if (recordingStream) // recording active
-                    {
-                        if (track.getType() == "audio") recordingStream.getAudioTracks()[0].enabled = !track.isMuted();
-                        if (track.getType() == "video") recordingStream.getVideoTracks()[0].enabled = !track.isMuted();
-                    }
-                }
-
-                if (APP.conference.getMyUserId() == id) {
-                    if (ofm.recognition) {
-                        if (track.isMuted()) // speech recog synch
-                        {
-                            console.debug("muted, stopping speech transcription");
-
-                            ofm.recognitionActive = false;
-                            ofm.recognition.stop();
-
-                        } else {
-                            console.debug("unmuted, starting speech transcription");
-                            ofm.recognition.start();
-                        }
-                    }
-                }
-            });
-
-            room.on(JitsiMeetJS.events.conference.PRIVATE_MESSAGE_RECEIVED, function (id, text, ts) {
-                var participant = APP.conference.getParticipantById(id);
-                var displayName = participant ? (participant._displayName || 'Anonymous-' + id) : (APP.conference.getLocalDisplayName() || "Me");
-
-                console.debug("custom_ofmeet.js private message", id, text, ts, displayName);
-
-                const pretty_time = dayjs().format('MMM DD HH:mm:ss');
-                pdf_body.push([pretty_time, displayName, text]);
-            });
-
-            room.on(JitsiMeetJS.events.conference.MESSAGE_RECEIVED, function (id, text, ts) {
-                var participant = APP.conference.getParticipantById(id);
-                var displayName = participant ? (participant._displayName || 'Anonymous-' + id) : (APP.conference.getLocalDisplayName() || "Me");
-
-                console.debug("custom_ofmeet.js message", id, text, ts, displayName, participant, padsModalOpened);
-
-                if (text.indexOf(interfaceConfig.OFMEET_CRYPTPAD_URL) == 0) {
-                    if (padsModalOpened) notifyText(displayName, text, id, function (button) {
-                        openPad(text);
-                    })
-
-                    if (padsModalOpened) {
-                        addPad(text);
-                    } else {
-                        padsList.push(text);
-                    }
-                } else {
-
-                    if (text.indexOf("http") != 0 && !captions.msgsDisabled) {
-                        if (captions.ele) captions.ele.innerHTML = displayName + " : " + text;
-                        captions.msgs.push({ text: text, stamp: (new Date()).getTime() });
-                    }
-
-                    const pretty_time = dayjs().format('MMM DD HH:mm:ss');
-                    pdf_body.push([pretty_time, displayName, text]);
-                }
-
-                if (breakoutHost && breakoutHost.started) {
-                    breakoutHost.broadcastMessage(text);
-                }
-            });
-
-            captions.ele = document.getElementById("captions");
+    function setup() {
+        if (!APP.connection || !APP.conference || !APP.conference.isJoined()) {
+            setTimeout(setup);
+            return;
         }
+		
+        APP.connection.xmpp.connection.addHandler(handleMessage, null, "message");
+        APP.connection.xmpp.connection.addHandler(handleMucMessage, "urn:xmpp:json:0", "message");
+        APP.connection.xmpp.connection.addHandler(handlePresence, null, "presence");
+		
+		APP.conference.getLocalDisplayName = function() {
+			const settings = JSON.parse(localStorage.getItem("features/base/settings"));
+			return settings?.displayName;
+		}
+
+		APP.conference.getParticipantDisplayName = function(id) {
+			const participant = APP.conference.getParticipantById(APP.conference.getMyUserId());
+			return participant?._displayName;
+		}
+		
+        console.debug("custom_ofmeet.js setup");
+		
+		const room = getConference();
+		listenWebPushEvents();
+
+		if (hashParams.subject) {
+			setConferenceName(hashParams.subject);
+		}
+
+		breakoutClient = new BreakoutClient();
+
+		room.on(JitsiMeetJS.events.conference.CONFERENCE_LEFT, function () {
+			console.debug("custom_ofmeet.js me left");
+
+			if (interfaceConfig.OFMEET_RECORD_CONFERENCE) {
+				if (ofm.recording) stopRecorder();
+
+				const ids = Object.getOwnPropertyNames(recordingVideoTrack);
+
+				ids.forEach(function (id) {
+					delete recordingAudioTrack[id];
+					delete recordingVideoTrack[id];
+				});
+			}
+		});
+
+		room.on(JitsiMeetJS.events.conference.USER_ROLE_CHANGED, function (user, role) {
+			console.debug("custom_ofmeet.js participant role change", user, role);
+
+			if (interfaceConfig.OFMEET_ENABLE_BREAKOUT &&
+				role == "moderator" &&
+				user == APP.conference.getMyUserId() &&
+				breakoutClient.state != BreakoutState.STARTED) {
+				$('#ofmeet-breakout').parent().show();
+			}
+		});
+
+		room.on(JitsiMeetJS.events.conference.TRACK_REMOVED, function (track) {
+			console.debug("custom_ofmeet.js track removed", track.getParticipantId());
+
+			if (track.getParticipantId() == APP.conference.getMyUserId()) {
+				clockTrack.leaves = (new Date()).getTime();
+				hideClock();
+
+				if (ofm.recognition) {
+					ofm.recognitionActive = false;
+					ofm.recognition.stop();
+				}
+
+				if (ofm.recording) stopRecorder();
+			}
+		});
+
+		room.on(JitsiMeetJS.events.conference.USER_JOINED, function (id) {
+			console.debug("user join", id, participants);
+			addParticipant(id);
+		});
+
+
+		room.on(JitsiMeetJS.events.conference.USER_LEFT, function (id) {
+			console.debug("user left", id);
+			removeParticipant(id);
+		});
+		
+
+		room.on(JitsiMeetJS.events.conference.TRACK_ADDED, function (track) {
+			const id = track.getParticipantId();
+			console.debug("custom_ofmeet.js track added", id, track.getType());
+
+			if (interfaceConfig.OFMEET_RECORD_CONFERENCE) {
+				if (track.getType() == "audio") recordingAudioTrack[id] = track.stream;
+				if (track.getType() == "video") recordingVideoTrack[id] = track.stream;
+			}
+		});
+
+		room.on(JitsiMeetJS.events.conference.PARTICIPANT_PROPERTY_CHANGED, function (participant, property, oldValue, newValue) {
+			console.debug("custom_ofmeet.js property changed", participant, property, oldValue, newValue);
+
+			if (property == 'mainRoomUserId') {
+				if (breakoutHost) {
+					breakoutHost.recallParticipant(participant._id, newValue);
+				}
+			}
+		});
+
+		room.on(JitsiMeetJS.events.conference.TRACK_MUTE_CHANGED, function (track) {
+			const id = track.getParticipantId();
+			console.debug("custom_ofmeet.js track muted", id, track.getType(), track.isMuted());
+
+			if (interfaceConfig.OFMEET_RECORD_CONFERENCE) {
+				if (track.getType() == "audio" && recordingAudioTrack[id]) recordingAudioTrack[id].getAudioTracks()[0].enabled = !track.isMuted();
+				if (track.getType() == "video" && recordingVideoTrack[id]) recordingVideoTrack[id].getVideoTracks()[0].enabled = !track.isMuted();
+
+				const recordingStream = recorderStreams[id];
+
+				if (recordingStream) // recording active
+				{
+					if (track.getType() == "audio") recordingStream.getAudioTracks()[0].enabled = !track.isMuted();
+					if (track.getType() == "video") recordingStream.getVideoTracks()[0].enabled = !track.isMuted();
+				}
+			}
+
+			if (APP.conference.getMyUserId() == id) {
+				if (ofm.recognition) {
+					if (track.isMuted()) // speech recog synch
+					{
+						console.debug("muted, stopping speech transcription");
+
+						ofm.recognitionActive = false;
+						ofm.recognition.stop();
+
+					} else {
+						console.debug("unmuted, starting speech transcription");
+						ofm.recognition.start();
+					}
+				}
+			}
+		});
+
+		room.on(JitsiMeetJS.events.conference.PRIVATE_MESSAGE_RECEIVED, function (id, text, ts) {
+			var participant = APP.conference.getParticipantById(id);
+			var displayName = participant ? (participant._displayName || 'Anonymous-' + id) : (APP.conference.getLocalDisplayName() || "Me");
+
+			console.debug("custom_ofmeet.js private message", id, text, ts, displayName);
+
+			const pretty_time = dayjs().format('MMM DD HH:mm:ss');
+			pdf_body.push([pretty_time, displayName, text]);
+		});
+
+		room.on(JitsiMeetJS.events.conference.MESSAGE_RECEIVED, function (id, text, ts) {
+			var participant = APP.conference.getParticipantById(id);
+			var displayName = participant ? (participant._displayName || 'Anonymous-' + id) : (APP.conference.getLocalDisplayName() || "Me");
+
+			console.debug("custom_ofmeet.js message", id, text, ts, displayName, participant, padsModalOpened);
+
+			if (text.indexOf(interfaceConfig.OFMEET_CRYPTPAD_URL) == 0) {
+				if (padsModalOpened) notifyText(displayName, text, id, function (button) {
+					openPad(text);
+				})
+
+				if (padsModalOpened) {
+					addPad(text);
+				} else {
+					padsList.push(text);
+				}
+			} else {
+
+				if (text.indexOf("http") != 0 && !captions.msgsDisabled) {
+					if (captions.ele) {
+					  captions.ele.innerHTML = displayName + " : " + text;
+					  if (interfaceConfig.OFMEET_CHAT_CAPTIONS_TIMEOUT && (interfaceConfig.OFMEET_CHAT_CAPTIONS_TIMEOUT > 0)) {
+						if (captions.timerHandle) window.clearTimeout(captions.timerHandle);
+						captions.timerHandle = window.setTimeout(function() {
+						  captions.ele.innerHTML = "";
+						}, interfaceConfig.OFMEET_CHAT_CAPTIONS_TIMEOUT);
+					  }
+					}
+					captions.msgs.push({ text: text, stamp: (new Date()).getTime() });
+				}
+
+				const pretty_time = dayjs().format('MMM DD HH:mm:ss');
+				pdf_body.push([pretty_time, displayName, text]);
+			}
+
+			if (breakoutHost && breakoutHost.started) {
+				breakoutHost.broadcastMessage(text);
+			}
+		});
+
+		captions.ele = document.getElementById("captions");
 
         if (storage.getItem('ofmeet.settings.avatar')) {
-            console.log('custom_ofmeet.js found avatar');
+            console.debug('custom_ofmeet.js found avatar');
             const dataUri = JSON.parse(storage.getItem('ofmeet.settings.avatar'));
             changeAvatar(dataUri, AvatarType.UPLOAD);
         } else {
@@ -493,29 +533,34 @@ var ofmeet = (function (ofm) {
         setOwnPresence();
 
         if (APP.connection.xmpp.connection._stropheConn.pass || config.ofmeetWinSSOEnabled) {
-            if (interfaceConfig.OFMEET_CACHE_PASSWORD && storageAvailable('localStorage')) {
-                if (!isElectron() && navigator.credentials && navigator.credentials.preventSilentAccess && typeof PasswordCredential === 'function') {
-                    storage.removeItem("xmpp_username_override");
-                    storage.removeItem("xmpp_password_override");
+            if (storageAvailable('localStorage')) {
 
-                    const id = APP.connection.xmpp.connection._stropheConn.authcid;
-                    const pass = APP.connection.xmpp.connection._stropheConn.pass;
-                    navigator.credentials.create({ password: { id: id, password: pass } }).then(function (credential) {
-                        navigator.credentials.store(credential).then(function () {
-                            console.debug("credential management api put", credential);
+                storage.removeItem("xmpp_username_override");
+                storage.removeItem("xmpp_password_override");
+                console.debug("credentials in local store cleared");
 
+                if (interfaceConfig.OFMEET_CACHE_PASSWORD) {
+                    if (!isElectron() && navigator.credentials && navigator.credentials.preventSilentAccess && typeof PasswordCredential === 'function') {
+                        const id = APP.connection.xmpp.connection._stropheConn.authcid;
+                        const pass = APP.connection.xmpp.connection._stropheConn.pass;
+                        navigator.credentials.create({ password: { id: id, password: pass } }).then(function (credential) {
+                            navigator.credentials.store(credential).then(function () {
+                                console.debug("credential management api put", credential);
+
+                            }).catch(function (err) {
+                                console.error("credential management api put error", err);
+                            });
                         }).catch(function (err) {
                             console.error("credential management api put error", err);
                         });
-                    }).catch(function (err) {
-                        console.error("credential management api put error", err);
-                    });
-                } else {
-                    const jid = APP.connection.xmpp.connection._stropheConn.authzid;
-                    const pass = APP.connection.xmpp.connection._stropheConn.pass;
-                    storage.setItem("xmpp_username_override", jid);
-                    storage.setItem("xmpp_password_override", pass);
-                    console.debug("credentials local store " + jid);
+                    } else {
+                        const jid = APP.connection.xmpp.connection._stropheConn.authzid;
+                        const pass = APP.connection.xmpp.connection._stropheConn.pass;
+						// BAO
+                        //storage.setItem("xmpp_username_override", jid);
+                        //storage.setItem("xmpp_password_override", pass);
+                        console.debug("credentials put to local store for" + jid);
+                    }
                 }
             }
 
@@ -531,10 +576,6 @@ var ofmeet = (function (ofm) {
             getBookmarks();
         }
 
-        APP.connection.xmpp.connection.addHandler(handleMessage, null, "message");
-        APP.connection.xmpp.connection.addHandler(handleMucMessage, "urn:xmpp:json:0", "message");
-        APP.connection.xmpp.connection.addHandler(handlePresence, null, "presence");
-
         getServiceWorker(function (registration) {
             console.debug('Service worker registered', registration);
         });
@@ -542,7 +583,7 @@ var ofmeet = (function (ofm) {
         setTimeout(postLoadSetup);
         setTimeout(postJoinSetup);
 
-        console.log("custom_ofmeet.js setup", APP.connection, captions);
+        console.debug("custom_ofmeet.js setup", APP.connection, captions);
 
         setTimeout(lostAudioWorkaround, 5000);
     }
@@ -574,6 +615,11 @@ var ofmeet = (function (ofm) {
 
         console.debug("postJoinSetup");
 
+        // setup drag& drop
+        console.debug("add drag&drop handlers to local and participants windows");
+        addParticipantDragDropHandlers(document.getElementById("filmstripLocalVideoThumbnail"));
+        getOccupants();
+
         // custom events for show/hide toolbox
         const toolboxObserver = new MutationObserver(mutations => {
             mutations.forEach((mutation) => {
@@ -604,7 +650,7 @@ var ofmeet = (function (ofm) {
             }
         }
 
-        if (interfaceConfig.OFMEET_RECORD_CONFERENCE && !config.webinar) {
+        if (interfaceConfig.OFMEET_RECORD_CONFERENCE) {
             createRecordButton();
             createPhotoButton();
             createDesktopButton();
@@ -615,13 +661,13 @@ var ofmeet = (function (ofm) {
             }
         }
 
-        if (interfaceConfig.OFMEET_TAG_CONFERENCE && !config.webinar) {
+        if (interfaceConfig.OFMEET_TAG_CONFERENCE) {
             if (interfaceConfig.OFMEET_ENABLE_TRANSCRIPTION && window.webkitSpeechRecognition && !isElectron()) {
                 setupSpeechRecognition();
             }
 
-            captions.msgsDisabled = !interfaceConfig.OFMEET_SHOW_CAPTIONS;
-            captions.transcriptDisabled = !interfaceConfig.OFMEET_ENABLE_TRANSCRIPTION || isElectron();
+            captions.msgsDisabled = !interfaceConfig.OFMEET_ENABLE_CAPTIONS || interfaceConfig.OFMEET_STARTWITH_CAPTIONS_DISABLED;
+            captions.transcriptDisabled = !interfaceConfig.OFMEET_ENABLE_TRANSCRIPTION || interfaceConfig.OFMEET_STARTWITH_TRANSCRIPTION_DISABLED || isElectron();
 
             createTagsButton();
         }
@@ -658,8 +704,9 @@ var ofmeet = (function (ofm) {
             id: 'ofmeet-contacts',
             icon: IMAGES.contact,
             label: i18n('toolbar.contactsManager'),
+            shortcut: 'O',
             callback: (evt) => {
-                evt.stopPropagation();
+                if (evt) evt.stopPropagation();
                 doContacts();
             }
         });
@@ -720,7 +767,7 @@ var ofmeet = (function (ofm) {
                 evt.stopPropagation();
                 takePhoto();
 
-                APP.UI.messageHandler.notify("Recording", "Conference Photo Taken");
+                APP.UI.messageHandler.showWarning({title:"Recording", description:"Conference Photo Taken"});
             }
         });
     }
@@ -748,8 +795,9 @@ var ofmeet = (function (ofm) {
             id: 'ofmeet-breakout',
             icon: IMAGES.person,
             label: i18n('toolbar.createBreakoutRooms'),
+            shortcut: 'B',
             callback: (evt) => {
-                evt.stopPropagation();
+                if (evt) evt.stopPropagation();
                 doBreakout();
                 getOccupants();
             }
@@ -783,7 +831,7 @@ var ofmeet = (function (ofm) {
     function createAvatarButton() {
         addToolbarItem({
             id: 'ofmeet-avatar',
-            icon: IMAGES.picture,
+            icon: IMAGES.avatar,
             label: i18n('toolbar.changePersonalAvatar'),
             callback: (evt) => {
                 evt.stopPropagation();
@@ -817,8 +865,9 @@ var ofmeet = (function (ofm) {
             id: 'ofmeet-cursor',
             icon: IMAGES.cursor,
             label: i18n('toolbar.shareCursorMousePointer'),
+            shortcut: 'P',
             callback: (evt) => {
-                evt.stopPropagation();
+                if (evt) evt.stopPropagation();
 
                 if (!cursorShared) {
                     $('#ofmeet-cursor').addClass('toggled');
@@ -833,7 +882,7 @@ var ofmeet = (function (ofm) {
 
         // Observe tile view status.
         // TODO: When the tile view change event is implemented in Jitsi Meet, it will be replaced with it.
-        const localVideoTileViewContainer = document.getElementById('localVideoTileViewContainer')
+        const localVideoTileViewContainer = document.getElementById('filmstripLocalVideoThumbnail')
 
         const observer = new MutationObserver(mutations => {
             APP.UI.emitEvent('UI.tile_view_changed', APP.store.getState()['features/video-layout'].tileViewEnabled);
@@ -954,7 +1003,16 @@ var ofmeet = (function (ofm) {
         });
     }
 
-    function addToolbarItem(option) {
+    function addToolbarItem(option) {		
+		if (mobileCheck()) {		// don't extend toolbar for mobile browsers only register shortcut
+            if (option.shortcut) {
+                APP.keyboardshortcut.registerShortcut(option.shortcut, null, () => {
+                    option.callback();
+                }, option.label);
+            }	
+			return $();			
+		}
+		
         option = {
             id: undefined,
             icon: undefined,
@@ -972,7 +1030,7 @@ var ofmeet = (function (ofm) {
             let $button = $(`
             <div aria-label="${option.label}" class="toolbox-button ofmeet-tooltip">
                 <div id="${option.id}" class="toolbox-icon">
-                    <div class="jitsi-icon" style="font-size: 12px;">${option.icon}</div>
+                    <div class="jitsi-icon jitsi-icon-default" style="font-size: 12px;">${option.icon}</div>
                 </div>
             </div>`);
             $button.children('.toolbox-icon').on('click.ofmeet-toolbox-icon', option.callback);
@@ -1030,10 +1088,10 @@ var ofmeet = (function (ofm) {
                 let $item;
                 switch (option.type) {
                     case 'list':
-                        $item = $(`<li class="ofmeet-toolbox-menu-item"><span class="overflow-menu-item-icon"><div class="jitsi-icon">${item.icon}</div></span><span class="profile-text">${item.text}</span></li>`);
+                        $item = $(`<li class="ofmeet-toolbox-menu-item"><span class="overflow-menu-item-icon"><div class="jitsi-icon jitsi-icon-default">${item.icon}</div></span><span class="profile-text">${item.text}</span></li>`);
                         break;
                     case 'tile':
-                        $item = $(`<li class="ofmeet-toolbox-menu-item"><div class="jitsi-icon">${item.icon}</div></li>`);
+                        $item = $(`<li class="ofmeet-toolbox-menu-item"><div class="jitsi-icon jitsi-icon-default">${item.icon}</div></li>`);
                         break;
                 }
 
@@ -1118,11 +1176,11 @@ var ofmeet = (function (ofm) {
 
     function getAllParticipants() {
         const state = APP.store.getState();
-        return (state["features/base/participants"] || []);
+        return (state["features/base/participants"].remote);
     }
 
     function getParticipant(id) {
-        return getAllParticipants().find(p => p.id == id);
+        return getAllParticipants().get(id);
     }
 
     function safeStartCase(s = '') {
@@ -1131,7 +1189,7 @@ var ofmeet = (function (ofm) {
     }
 
     function handlePresence(presence) {
-        //console.log("handlePresence", presence);
+        //console.debug("handlePresence", presence);
 
         const id = Strophe.getResourceFromJid(presence.getAttribute('from'));
         const raisedHand = presence.querySelector('jitsi_participant_raisedHand');
@@ -1139,11 +1197,12 @@ var ofmeet = (function (ofm) {
         const nick = presence.querySelector('nick');
         const avatarURL = presence.querySelector('avatar-url');
 
-        if (raisedHand) {
-            handsRaised = getAllParticipants().filter(p => p.raisedHand).length;
+        if (raisedHand) {			
+            handsRaised = Array.from(getAllParticipants().keys()).filter(p => p.raisedHand).length;
             const handsTotal = APP.conference.membersCount;
             const handsPercentage = Math.round(100 * handsRaised / handsTotal);
             const label = handsRaised > 0 ? i18n('handsRaised.handsRaised', { raised: handsRaised, total: handsTotal, percentage: handsPercentage }) : "";
+            if (captions.timerHandle) window.clearTimeout(captions.timerHandle);
             if (captions.ele) captions.ele.innerHTML = label;
             captions.msgs.push({ text: label, stamp: (new Date()).getTime() });
         }
@@ -1187,7 +1246,7 @@ var ofmeet = (function (ofm) {
         return true;
     }
 
-    function handleMessage(msg) {
+    function handleMessage(msg) {		
         if (!msg.getAttribute("type")) // alert message
         {
             const body = msg.querySelector('body');
@@ -1201,7 +1260,7 @@ var ofmeet = (function (ofm) {
         return true;
     }
 
-    function handleMucMessage(msg) {
+    function handleMucMessage(msg) {	
         const participant = Strophe.getResourceFromJid(msg.getAttribute("from"));
 
         if (msg.getAttribute("type") == "error") {
@@ -1230,14 +1289,26 @@ var ofmeet = (function (ofm) {
                         breakoutClient.stopBreakout(json.url, json.wait);
                     }
                     break;
+				case 'push-room-properties':
+					handleRoomProperties(json);
+					break;
                 default:
                     console.error("unknown MUC message");
-                    return;
+                    return true;
             }
         }
 
         return true;
     }
+	
+	function handleRoomProperties(json)	{
+        const keys = Object.getOwnPropertyNames(json);
+
+        keys.forEach(function (key) {
+			console.debug("handleRoomProperties", key, json[key]);
+			interfaceConfig[key] = json[key];
+        })		
+	}
 
     //-------------------------------------------------------
     //  WORKAROUND: prevent disruption of a muted audio connection by a short toggle
@@ -1249,7 +1320,7 @@ var ofmeet = (function (ofm) {
             audioTemporaryUnmuted = !audioTemporaryUnmuted;
             console.debug("audio " + (audioTemporaryUnmuted ? "temporary un" : "re") + "muted");
         }
-        setTimeout(lostAudioWorkaround, audioTemporaryUnmuted ? 1000 : lostAudioWorkaroundInterval);
+        setTimeout(lostAudioWorkaround, audioTemporaryUnmuted ? 1 : lostAudioWorkaroundInterval);
     }
 
     //-------------------------------------------------------
@@ -1660,7 +1731,7 @@ var ofmeet = (function (ofm) {
 
                     //APP.UI.toggleChat();
                     APP.conference._room.sendTextMessage(clipText)
-                    APP.UI.messageHandler.notify("Share Clipboard", "Clipboard shared with other participants");
+                    APP.UI.messageHandler.showWarning({title:"Share Clipboard", description:"Clipboard shared with other participants"});
                 });
             });
 
@@ -1690,7 +1761,7 @@ var ofmeet = (function (ofm) {
 
         if (padContent) {
             padsModal.close();
-            APP.UI.messageHandler.notify("CryptPad", "Quit active pad before opening a new one");
+            APP.UI.messageHandler.showWarning({title:"CryptPad", description:"Quit active pad before opening a new one"});
         } else {
             const largeVideo = document.querySelector("#largeVideo");
             const iframe = largeVideo.cloneNode(false);
@@ -1800,7 +1871,7 @@ var ofmeet = (function (ofm) {
                     if (tags.host) {
                         $('#tags-host').val(tags.host);
                     } else {
-                        const modrator = getAllParticipants().find(p => p.role == 'moderator');
+                        const modrator = Array.from(getAllParticipants().keys()).find(p => p.role == 'moderator');
                         if (modrator) {
                             $('#tags-host').val(modrator.name);
                         }
@@ -1848,7 +1919,7 @@ var ofmeet = (function (ofm) {
                 tagsModal.close();
             });
 
-            if (interfaceConfig.OFMEET_SHOW_CAPTIONS) {
+            if (interfaceConfig.OFMEET_ENABLE_CAPTIONS) {
                 $('#tags-message-captions').on('change.tags', evt => {
                     captions.msgsDisabled = !evt.target.checked;
                     if (captions.ele) captions.ele.innerHTML = "";
@@ -1972,9 +2043,9 @@ var ofmeet = (function (ofm) {
 
         if (!config.ofmeetLiveStream) {
             createVideoViewerHTML();
-            APP.UI.messageHandler.notify("Recording", "Conference recording stopped");
+            APP.UI.messageHandler.showWarning({title:"Recording", description:"Conference recording stopped"});
         } else {
-            APP.UI.messageHandler.notify("Streaming", "Conference streaming stopped");
+            APP.UI.messageHandler.showWarning({title:"Streaming", description:"Conference streaming stopped"});
         }
         ofm.recording = false;
     }
@@ -2111,7 +2182,7 @@ var ofmeet = (function (ofm) {
         console.debug("custom_ofmeet.js startMeetingRecorder");
 
         $('#ofmeet-record svg').css('fill', '#f00');
-        APP.UI.messageHandler.notify("Recording", "Conference Recording Started");
+        APP.UI.messageHandler.showWarning({title:"Recording", description:"Conference Recording Started"});
 
         captions.msgs = [];
         clockTrack.start = (new Date()).getTime();
@@ -2207,16 +2278,16 @@ var ofmeet = (function (ofm) {
         const ws = new WebSocket(url, [streamKey]);
 
         ws.onopen = (event) => {
-            console.log(`Connection opened: ${JSON.stringify(event)}`);
+            console.debug(`Connection opened: ${JSON.stringify(event)}`);
             ws.send(JSON.stringify(metadata));
         };
 
         ws.onclose = (event) => {
-            console.log(`Connection closed: ${JSON.stringify(event)}`);
+            console.debug(`Connection closed: ${JSON.stringify(event)}`);
         };
 
         ws.onerror = (event) => {
-            console.log(`An error occurred with websockets: ${JSON.stringify(event)}`);
+            console.debug(`An error occurred with websockets: ${JSON.stringify(event)}`);
         };
         return ws;
     }
@@ -2272,7 +2343,7 @@ var ofmeet = (function (ofm) {
                     websocket = null;
                 }
 
-                APP.UI.messageHandler.notify("Streaming", "Conference streaming started");
+                APP.UI.messageHandler.showWarning({title:"Streaming", description:"Conference streaming started"});
 
             } else {
                 filenames[id] = getFilename("ofmeet-video-" + id, ".webm");
@@ -2319,7 +2390,7 @@ var ofmeet = (function (ofm) {
                     });
                 }
 
-                APP.UI.messageHandler.notify("Recording", "Conference recording started");
+                APP.UI.messageHandler.showWarning({title:"Recording", description:"Conference recording started"});
             }
             videoRecorder[id].start(1000);
             const startTime = Date.now();
@@ -2382,7 +2453,7 @@ var ofmeet = (function (ofm) {
                 room.setLocalParticipantProperty('mainRoomUserId', this.mainRoomUserId);
             }
 
-            console.log(decodeURI(APP.conference.roomName));
+            console.debug(decodeURI(APP.conference.roomName));
             if (decodeURI(APP.conference.roomName) != this.breakoutRoom) {
                 storage.removeItem('breakoutRoom');
                 storage.removeItem('startTime');
@@ -2460,7 +2531,7 @@ var ofmeet = (function (ofm) {
             const roomUrl = new URL(url);
             roomUrl.hash = this.toParamString(params, roomUrl.hash);
 
-            APP.UI.messageHandler.notify(i18n('breakout.breakoutRooms'), i18n('breakout.joining', { sec: wait }));
+            APP.UI.messageHandler.showWarning({title:i18n('breakout.breakoutRooms'), description:i18n('breakout.joining', { sec: wait })});
             this.countdownTimer = setTimeout(() => { location.replace(roomUrl.href) }, wait * 1000);
         }
 
@@ -2476,14 +2547,14 @@ var ofmeet = (function (ofm) {
 
             if (url == location.href) {
                 this.state = BreakoutState.STOPPED;
-                APP.UI.messageHandler.notify(i18n('breakout.breakoutRooms'), i18n('breakout.cancelled'));
+                APP.UI.messageHandler.showWarning({title:i18n('breakout.breakoutRooms'), description:i18n('breakout.cancelled')});
             } else {
                 this.state = BreakoutState.STOPPING;
 
                 const roomUrl = new URL(url);
                 roomUrl.hash = this.toParamString({ mainRoomUserId: this.mainRoomUserId }, roomUrl.hash);
 
-                APP.UI.messageHandler.notify(i18n('breakout.breakoutRooms'), i18n('breakout.leaving', { sec: wait }));
+                APP.UI.messageHandler.showWarning({title:i18n('breakout.breakoutRooms'), description:i18n('breakout.leaving', { sec: wait })});
                 this.countdownTimer = setTimeout(() => { location.replace(roomUrl.href) }, wait * 1000);
             }
         }
@@ -2688,7 +2759,7 @@ var ofmeet = (function (ofm) {
                     for (let i = currentSize - 1; i >= size; i--) {
                         const roomParticipants = this.getRoomParticipants(i + 1);
                         for (let p of roomParticipants) {
-                            console.log(p);
+                            console.debug(p);
                             this.moveRoomParticipant('participants', p);
                         }
                         this.kanban.removeBoard('room_' + (i + 1));
@@ -3053,6 +3124,11 @@ var ofmeet = (function (ofm) {
 
         ofm.recognition.onerror = function (event) {
             console.debug("Speech to text error", event);
+            console.debug('Speech recognition error detected: ' + event.error);
+            console.debug('Additional information: ' + event.message);
+            if (event.error && event.error == "network") {
+                ofm.recognitionActive = false;
+            }
         }
 
         ofm.recognition.start();
@@ -3088,15 +3164,15 @@ var ofmeet = (function (ofm) {
 
                     reader.onerror = function (event) {
                         console.error("uploadAvatar - error", event);
-                        APP.UI.messageHandler.notify(i18n('avatar.avatarUpload'), i18n('avatar.imageFileError') + event);
+                        APP.UI.messageHandler.showWarning({title:i18n('avatar.avatarUpload'), description:i18n('avatar.imageFileError') + event});
                     };
 
                     reader.readAsDataURL(file);
                 } else {
-                    APP.UI.messageHandler.notify(i18n('avatar.avatarUpload'), i18n('avatar.imageFileSizeError', { size: (avatarFileSizeLimit / 1024 / 1024) }));
+                    APP.UI.messageHandler.showWarning({title:i18n('avatar.avatarUpload'), description:i18n('avatar.imageFileSizeError', { size: (avatarFileSizeLimit / 1024 / 1024) })});
                 }
             } else {
-                APP.UI.messageHandler.notify(i18n('avatar.avatarUpload'), i18n('avatar.imageFileTypeError'));
+                APP.UI.messageHandler.showWarning({title:i18n('avatar.avatarUpload'), description:i18n('avatar.imageFileTypeError')});
             }
         }
     }
@@ -3452,6 +3528,19 @@ var ofmeet = (function (ofm) {
                 console.error("webpushsend error", error);
                 if (callback) callback(name, error);				
             })
+
+			/* TODO go back to client-side when free proxy available or browser vendors support CORS
+		
+				window.WebPushLib.setVapidDetails('xmpp:' + APP.conference._room.room.myroomjid, secret.publicKey, secret.privateKey);
+
+				window.WebPushLib.sendNotification(secret.subscription, JSON.stringify(payload), { TTL: 60 }).then(response => {
+					console.debug("Web Push Notification is sended!");
+					if (callback) callback(name);
+				}).catch(e => {
+					console.error('Failed to notify', name, e)
+					if (callback) callback(name, e);
+				})
+			*/			
         }
     }
 
@@ -3632,6 +3721,7 @@ var ofmeet = (function (ofm) {
     }({}));
 
     ofm.recording = false;
+	ofm.getAllParticipants = getAllParticipants;
 
     return ofm;
 

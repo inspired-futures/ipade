@@ -53,10 +53,12 @@
         "noMessagesMessage": "У канферэнцыі пакуль няма ніякіх паведамленняў. Пачніце размову!",
         "nickname": {
             "popover": "Калі ласка, пазначце імя",
-            "title": "Калі ласка, увядзіце імя для выкарыстання чата"
+            "title": "Калі ласка, увядзіце імя для выкарыстання чата",
+            "titleWithPolls": "Калі ласка, увядзіце імя для выкарыстання чата"
         },
         "privateNotice": "Асабістае паведамленне карыстальнiку {{recipient}}",
         "title": "Чат",
+        "titleWithPolls": "Чат",
         "you": "Вы"
     },
     "chromeExtensionBanner": {
@@ -486,8 +488,8 @@
     },
     "profile": {
         "setDisplayNameLabel": "Якое адлюстроўваецца імя",
-        "setEmailInput": "Калі ласка, увядзіце e-mail",
-        "setEmailLabel": "E-mail для Gravatar",
+        "setEmailInput": "Калі ласка, увядзіце email",
+        "setEmailLabel": "Email для Gravatar",
         "title": "Профіль"
     },
     "raisedHand": "Хоча гаварыць",
@@ -556,7 +558,7 @@
         "disableCallIntegration": "Адключыць убудаваную інтэграцыю выклікаў",
         "disableP2P": "Адключыць рэжым Peer-To-Peer",
         "displayName": "Якое адлюстроўваецца імя",
-        "email": "E-mail",
+        "email": "Email",
         "header": "Налады",
         "profileSection": "Профіль",
         "serverURL": "Адрас сервера",

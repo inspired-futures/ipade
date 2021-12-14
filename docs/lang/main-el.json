@@ -68,10 +68,12 @@
         "noMessagesMessage": "Δεν υπάρχουν μηνύματα στη συνάντηση ακόμα. Ξεκινήστε μια συζήτηση εδώ!",
         "nickname": {
             "popover": "Επιλέξτε ένα ψευδώνυμο",
-            "title": "Εισάγετε ένα ψευδώνυμο για τη χρήση της συνομιλίας"
+            "title": "Εισάγετε ένα ψευδώνυμο για τη χρήση της συνομιλίας",
+            "titleWithPolls": "Εισάγετε ένα ψευδώνυμο για τη χρήση της συνομιλίας"
         },
         "privateNotice": "Ιδιωτικό μηνύμα στον / στην {recipient}}",
         "title": "Συνομιλία",
+        "titleWithPolls": "Συνομιλία",
         "you": "Εσείς"
     },
     "chromeExtensionBanner": {
@@ -542,7 +544,7 @@
     },
     "profile": {
         "setDisplayNameLabel": "Ρυθμίστε το όνομα εμφάνισής σας",
-        "setEmailInput": "Εισάγετε το e-mail",
+        "setEmailInput": "Εισάγετε το email",
         "setEmailLabel": "Ρυθμίστε το gravatar email",
         "title": "Προφίλ"
     },
@@ -619,7 +621,7 @@
         "disableCallIntegration": "Απενεργοποίηση ολοκλήρωσης εγγενούς κλήσης",
         "disableP2P": "Απενεργοποίηση λειτουργίας Peer-to-Peer",
         "displayName": "Εμφανιζόμενο όνομα",
-        "email": "E-mail",
+        "email": "Email",
         "header": "Ρυθμίσεις",
         "profileSection": "Προφίλ",
         "serverURL": "Διεύθυνση URL του διακομιστή",
