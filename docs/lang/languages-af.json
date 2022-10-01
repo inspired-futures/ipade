@@ -1,11 +1,10 @@
 {
-    "en": "Engels",
     "af": "",
-    "az": "Azerbeidjans",
     "bg": "Bulgaars",
     "cs": "Tsjeggies",
     "de": "Duits",
     "el": "Grieks",
+    "en": "Engels",
     "eo": "Esperanto",
     "es": "Spaans",
     "fr": "Frans",
@@ -22,6 +21,7 @@
     "sl": "Sloweens",
     "sv": "Sweeds",
     "tr": "Turks",
+    "uk": "Oekraïens",
     "vi": "Viëtnamees",
     "zhCN": "Sjinees (Sjina)"
 }

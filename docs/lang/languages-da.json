@@ -1,5 +1,4 @@
 {
-    "en": "Engelsk",
     "af": "Sydafrikansk",
     "bg": "Bulgarsk",
     "ca": "Katalansk",
@@ -7,6 +6,7 @@
     "da": "Dansk",
     "de": "Tysk",
     "el": "Græsk",
+    "en": "Engelsk",
     "enGB": "Engelsk (Storbritannien)",
     "eo": "Esperanto",
     "es": "Spansk",
@@ -27,6 +27,7 @@
     "ru": "Russisk",
     "sv": "Svensk",
     "tr": "Tyrkisk",
+    "uk": "Ukrainsk",
     "vi": "Vietnamesisk",
     "zhCN": "Kinesisk (China)",
     "zhTW": "Kinesisk (Taiwan)"

@@ -75,6 +75,7 @@ var ofmeet = (function (ofm) {
     let breakoutHost = null;
     let breakoutClient = null;
     let hashParams = [];
+    let inprogressList = {};
 
     class DummyStorage {
         constructor() {
@@ -153,9 +154,8 @@ var ofmeet = (function (ofm) {
                         if (user.indexOf('@') == -1) {
                             user += '@' + config.hosts["domain"];
                         }
-						// BAO
-                        //storage.setItem("xmpp_username_override", user);
-                        //storage.setItem("xmpp_password_override", credential.password);
+                        storage.setItem("xmpp_username_override", user);
+                        storage.setItem("xmpp_password_override", credential.password);
                         console.debug("credentials passed to local store");
                     }
                 }).catch(function (err) {
@@ -177,9 +177,29 @@ var ofmeet = (function (ofm) {
 			})
 		}
 		if (window.webkitSpeechRecognition && !isElectron()) setupVoiceCommand()
+			
+		const actionChannel = new BroadcastChannel('ofmeet-notification-event');
+		
+		actionChannel.addEventListener('message', event =>
+		{
+			console.debug("sw notication action", event.data);
+			
+			if (event.data.action == "accept") {
+				const start = event.data.payload.msgDate + "T" + event.data.payload.msgTime + ":00";
+				const key = "ofmeet.calendar." + start;
+				const title = "Join " + event.data.payload.roomName + ` (${event.data.payload.sender})`;
+				const url = event.data.payload.url;
+				
+				storage.setItem(key, JSON.stringify({title, url, start}));
+			}					
 
+		});			
 
-        setTimeout(preSetup);
+        if ($('#welcome_page').length) {
+			setTimeout(setupWelcomePage);
+		} else {
+        	setTimeout(preSetup);
+        }
     });
 
     window.addEventListener("beforeunload", function (event) {
@@ -320,13 +340,17 @@ var ofmeet = (function (ofm) {
             enter_room_button.parentNode.appendChild(button);
         }
     }
-	
+		
     function preSetup() {
-        if (!APP.connection) {
+        if (!APP.connection || !APP.connection.xmpp.connection) {
             setTimeout(preSetup);
             return;
         }
-
+		
+        APP.connection.xmpp.connection.addHandler(handleMessage, null, "message");
+        APP.connection.xmpp.connection.addHandler(handleMucMessage, "urn:xmpp:json:0", "message");
+        APP.connection.xmpp.connection.addHandler(handlePresence, null, "presence");
+		
         console.debug("custom_ofmeet.js pre-setup");		
 		setup();	
 	}	
@@ -336,20 +360,6 @@ var ofmeet = (function (ofm) {
             setTimeout(setup);
             return;
         }
-		
-        APP.connection.xmpp.connection.addHandler(handleMessage, null, "message");
-        APP.connection.xmpp.connection.addHandler(handleMucMessage, "urn:xmpp:json:0", "message");
-        APP.connection.xmpp.connection.addHandler(handlePresence, null, "presence");
-		
-		APP.conference.getLocalDisplayName = function() {
-			const settings = JSON.parse(localStorage.getItem("features/base/settings"));
-			return settings?.displayName;
-		}
-
-		APP.conference.getParticipantDisplayName = function(id) {
-			const participant = APP.conference.getParticipantById(APP.conference.getMyUserId());
-			return participant?._displayName;
-		}
 		
         console.debug("custom_ofmeet.js setup");
 		
@@ -407,6 +417,7 @@ var ofmeet = (function (ofm) {
 		room.on(JitsiMeetJS.events.conference.USER_JOINED, function (id) {
 			console.debug("user join", id, participants);
 			addParticipant(id);
+            publishWebPush();
 		});
 
 
@@ -454,16 +465,16 @@ var ofmeet = (function (ofm) {
 			}
 
 			if (APP.conference.getMyUserId() == id) {
-				if (ofm.recognition) {
+				if (track.getType() == "audio" && ofm.recognition) {
 					if (track.isMuted()) // speech recog synch
 					{
-						console.debug("muted, stopping speech transcription");
+						console.debug("audio muted, stopping speech transcription");
 
 						ofm.recognitionActive = false;
 						ofm.recognition.stop();
 
 					} else {
-						console.debug("unmuted, starting speech transcription");
+						console.debug("audio unmuted, starting speech transcription");
 						ofm.recognition.start();
 					}
 				}
@@ -472,7 +483,7 @@ var ofmeet = (function (ofm) {
 
 		room.on(JitsiMeetJS.events.conference.PRIVATE_MESSAGE_RECEIVED, function (id, text, ts) {
 			var participant = APP.conference.getParticipantById(id);
-			var displayName = participant ? (participant._displayName || 'Anonymous-' + id) : (APP.conference.getLocalDisplayName() || "Me");
+			var displayName = participant ? (participant._displayName || 'Anonymous-' + id) : (getLocalDisplayName() || "Me");
 
 			console.debug("custom_ofmeet.js private message", id, text, ts, displayName);
 
@@ -482,13 +493,13 @@ var ofmeet = (function (ofm) {
 
 		room.on(JitsiMeetJS.events.conference.MESSAGE_RECEIVED, function (id, text, ts) {
 			var participant = APP.conference.getParticipantById(id);
-			var displayName = participant ? (participant._displayName || 'Anonymous-' + id) : (APP.conference.getLocalDisplayName() || "Me");
+			var displayName = participant ? (participant._displayName || 'Anonymous-' + id) : (getLocalDisplayName() || "Me");
 
 			console.debug("custom_ofmeet.js message", id, text, ts, displayName, participant, padsModalOpened);
 
 			if (text.indexOf(interfaceConfig.OFMEET_CRYPTPAD_URL) == 0) {
-				if (padsModalOpened) notifyText(displayName, text, id, function (button) {
-					openPad(text);
+				if (padsModalOpened) notifyText(displayName, text, id, function (id, button) {
+					if (button == 0) openPad(text);
 				})
 
 				if (padsModalOpened) {
@@ -527,7 +538,7 @@ var ofmeet = (function (ofm) {
             const dataUri = JSON.parse(storage.getItem('ofmeet.settings.avatar'));
             changeAvatar(dataUri, AvatarType.UPLOAD);
         } else {
-            changeAvatar(createAvatar(APP.conference.getLocalDisplayName()), AvatarType.INITIALS);
+            changeAvatar(createAvatar(getLocalDisplayName()), AvatarType.INITIALS);
         }
 
         setOwnPresence();
@@ -538,28 +549,34 @@ var ofmeet = (function (ofm) {
                 storage.removeItem("xmpp_username_override");
                 storage.removeItem("xmpp_password_override");
                 console.debug("credentials in local store cleared");
+				
+				const storeLocally = function() {
+					const jid = APP.connection.xmpp.connection._stropheConn.authzid;
+					const pass = APP.connection.xmpp.connection._stropheConn.pass;
+					storage.setItem("xmpp_username_override", jid);
+					storage.setItem("xmpp_password_override", pass);
+					console.debug("credentials put to local store for" + jid);					
+				}
 
                 if (interfaceConfig.OFMEET_CACHE_PASSWORD) {
                     if (!isElectron() && navigator.credentials && navigator.credentials.preventSilentAccess && typeof PasswordCredential === 'function') {
                         const id = APP.connection.xmpp.connection._stropheConn.authcid;
                         const pass = APP.connection.xmpp.connection._stropheConn.pass;
+						
                         navigator.credentials.create({ password: { id: id, password: pass } }).then(function (credential) {
                             navigator.credentials.store(credential).then(function () {
                                 console.debug("credential management api put", credential);
 
                             }).catch(function (err) {
                                 console.error("credential management api put error", err);
+								storeLocally();								
                             });
                         }).catch(function (err) {
                             console.error("credential management api put error", err);
+							storeLocally();							
                         });
                     } else {
-                        const jid = APP.connection.xmpp.connection._stropheConn.authzid;
-                        const pass = APP.connection.xmpp.connection._stropheConn.pass;
-						// BAO
-                        //storage.setItem("xmpp_username_override", jid);
-                        //storage.setItem("xmpp_password_override", pass);
-                        console.debug("credentials put to local store for" + jid);
+						storeLocally();
                     }
                 }
             }
@@ -692,6 +709,206 @@ var ofmeet = (function (ofm) {
             createConfettiButton();
         }
     }
+
+    //-------------------------------------------------------
+    //
+    //  setup welcome page
+    //
+    //-------------------------------------------------------
+
+    function setupWelcomePage() {
+
+        if (interfaceConfig.IN_PROGRESS_LIST_ENABLED) {		
+			setupInprogressList();
+		}
+		
+        if (interfaceConfig.OFMEET_CONTACTS_MGR) {		
+			setupCalendarView();	
+		}			
+	}
+
+    function setupInprogressList() {
+		$('#react').on('click.tab-button', '.tab-buttons .tab', () => setTimeout(() => refreshInprogressListDOM(), 0));
+
+		if (interfaceConfig.IN_PROGRESS_LIST_INTERVAL > 0) 
+		{			
+			if (window.inprogressListUpdateInterval) {
+				clearInterval(window.inprogressListUpdateInterval);
+			}			
+			window.inprogressListUpdateInterval = setInterval(() => updateInprogressList(), interfaceConfig.IN_PROGRESS_LIST_INTERVAL * 1000);
+		}
+		updateInprogressList();
+    }
+
+    function updateInprogressList() {
+        fetch("inProgressList.json")
+            .then(res => res.ok && res.json())
+            .then(data => {
+                inprogressList = data;
+                refreshInprogressListDOM();
+            })
+            .catch(error => console.error(error));
+    }
+	
+	function refreshInprogressListDOM() {
+		let $container = $('#inprogress_list')
+		
+		if ($container.length) {
+            if (!$container.hasClass('meetings-list')) {
+                $container.attr({
+                    'aria-label': i18n('welcomepage.inProgressList'),
+                    'class': "meetings-list",
+                    'role': "menu",
+                    'tabindex': "-1"})
+                    .on('click.inprogress-list', '.with-click-handler', (e) => {
+                        location.href = $(e.currentTarget).data('url');
+                    });
+            }
+
+            let html = '';
+            if (inprogressList && inprogressList.length) {
+                inprogressList.forEach(item => {
+                    html +=
+                        `<div aria-label="test" class="item with-click-handler" role="menuitem" tabindex="0" data-url="${item.url}">
+                            <div class="left-column">
+                                <span class="title">${localizedDate(item.date).format('LL')}</span><span class="subtitle">${localizedDate(item.date).format('LT')}</span>
+                            </div>
+                            <div class="right-column">
+                                <span class="title">${item.name}</span><span class="subtitle">${formatTimeSpan(item.duration / 1000)}</span>
+                            </div>
+                        </div>`;
+                })
+            } else {
+                html =
+                    `<div aria-describedby="meetings-list-empty-description" aria-label="${i18n('welcomepage.inProgressList')}" class="meetings-list-empty" role="region">
+                        <span class="description" id="meetings-list-empty-description">${i18n('welcomepage.inProgressListEmpty')}</span>
+                    </div>`;
+            }
+
+            $container.empty().append(html);
+		}
+	}
+	
+	function setupCalendarView() {		
+		const welcome = document.querySelector('#welcome_page');		
+		let container = document.querySelector('#ofmeet_calendar');	
+		
+		function setupFullCalendar() {
+			container = document.querySelector('#ofmeet_calendar');	
+
+			if (!container) {
+				setTimeout(setupFullCalendar, 500);
+				return;
+			}	
+			
+			let html = "<div id='full_calendar' style='color:black; background-color:white;'></div>";
+			container.innerHTML = html;
+			calendarEl = document.querySelector('#full_calendar');
+			
+			const config =  {
+				selectable: true,				
+				initialView: 'timeGridDay',
+				headerToolbar: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'dayGridMonth,timeGridWeek,timeGridDay'
+				},
+				dateClick: function(info) {
+					console.debug("dateClick", info)
+				},
+			    select: function(info) {
+					console.debug("select", info)
+			    },				
+				events: []
+			};
+			
+			for (var i = 0; i < storage.length; i++) 
+			{
+				if (storage.key(i).indexOf("ofmeet.calendar.") == 0) {
+					config.events.push(JSON.parse(storage.getItem(storage.key(i))));
+				}
+			}			
+
+			console.debug("setupCalendarView", calendarEl, config);
+			
+			calendar = new FullCalendar.Calendar(calendarEl, config);
+			calendar.render();	
+
+			if (window.calendarInterval) {
+				clearInterval(window.calendarInterval);
+			}
+			
+			window.calendarInterval = setInterval(checkForMeetings, 300000);		
+			checkForMeetings();		
+		}
+			
+		if (welcome) {					
+			if (!container) {
+				setTimeout(setupCalendarView, 500);
+				return;
+			}	
+
+			let calendarEl = document.querySelector('#full_calendar');
+			
+			if (!calendarEl) {
+				setupFullCalendar();
+
+				const tab = document.querySelector('.tab.selected');
+				
+				if (tab) tab.addEventListener("click", function (evt) 
+				{		
+					if (evt.target.innerHTML == "Calendar") {
+						setupFullCalendar();
+					}
+				})
+			}				
+		}
+	}	
+	
+	function checkForMeetings() {
+		console.debug("checkForMeetings");		
+        fetch("inProgressList.json").then(res => res.ok && res.json()).then(data => notifyForMeeting(data)).catch(error => console.error(error));		
+	}
+	
+	function notifyForMeeting(list)	{
+		console.debug("notifyForMeeting", list);
+		
+		for (var i = 0; i < storage.length; i++) 
+		{
+			if (storage.key(i).indexOf("ofmeet.calendar.") == 0) {
+				const meeting = JSON.parse(storage.getItem(storage.key(i)));
+				const start = dayjs(meeting.start + ".000Z");
+				const now = dayjs();
+				
+				const notifyStart = start.subtract(15, 'minute');
+				const notifyStop = start.add(15, 'minute');
+				
+				const notifyBefore = now.isBefore(start) && now.isAfter(notifyStart);
+				const notifyAfter = now.isBefore(notifyStop) && now.isAfter(start);
+				
+				console.debug("notifyForMeeting", meeting, start, now, notifyStart, notifyBefore, notifyAfter, list);
+				
+				if (notifyBefore) {
+					notifyText(meeting.title, meeting.url, storage.key(i), (id, button) => {
+						console.log("clicked button", button);
+						if (button == 0) location.href = meeting.url;
+					})					
+				}
+				else {
+					list.forEach(item => 
+					{
+						if (item.url.toLowerCase() == meeting.url.toLowerCase() && notifyAfter) {
+							notifyText(item.name, item.url, storage.key(i), (id, button) => {
+								console.log("clicked button", button);								
+								if (button == 0) location.href = item.url;
+							})								
+						}
+					})					
+				}
+					
+			}
+		}		
+	}
 
     //-------------------------------------------------------
     //
@@ -865,7 +1082,7 @@ var ofmeet = (function (ofm) {
             id: 'ofmeet-cursor',
             icon: IMAGES.cursor,
             label: i18n('toolbar.shareCursorMousePointer'),
-            shortcut: 'P',
+            shortcut: '!',
             callback: (evt) => {
                 if (evt) evt.stopPropagation();
 
@@ -960,7 +1177,7 @@ var ofmeet = (function (ofm) {
                         'text:' + String.fromCodePoint(0x1F338) // :sakura:
                     ]
                 };
-            } else if ((now.getMonth() == 2 && now.getDate() >= 27) || (now.getMonth() == 3 && now.getDate() <= 5)) { // week of Easter 2021
+            } else if ((now.getMonth() == 3 && now.getDate() >= 10) && (now.getMonth() == 3 && now.getDate() <= 18)) { // Holy Week and Easter 2022
                 options = {
                     ...options,
                     shapes: [
@@ -1171,9 +1388,19 @@ var ofmeet = (function (ofm) {
     }
 
     function getConferenceJid() {
-        return getConference().room.roomjid;
+        return getConference()?.room?.roomjid;
     }
+	
+	function getLocalDisplayName() {
+		const settings = JSON.parse(storage.getItem("features/base/settings"));
+		return settings?.displayName;
+	}
 
+	function getParticipantDisplayName(id) {
+		const participant = APP.conference.getParticipantById(APP.conference.getMyUserId());
+		return participant?._displayName;
+	}
+	
     function getAllParticipants() {
         const state = APP.store.getState();
         return (state["features/base/participants"].remote);
@@ -1198,13 +1425,14 @@ var ofmeet = (function (ofm) {
         const avatarURL = presence.querySelector('avatar-url');
 
         if (raisedHand) {			
-            handsRaised = Array.from(getAllParticipants().keys()).filter(p => p.raisedHand).length;
+            const handsRaised = APP.store.getState()["features/base/participants"].raisedHandsQueue.length;
             const handsTotal = APP.conference.membersCount;
             const handsPercentage = Math.round(100 * handsRaised / handsTotal);
+            $('div#raisedHandsCountLabel > span').html(handsRaised + '/' + handsTotal + ' (' + handsPercentage + '%)');
             const label = handsRaised > 0 ? i18n('handsRaised.handsRaised', { raised: handsRaised, total: handsTotal, percentage: handsPercentage }) : "";
             if (captions.timerHandle) window.clearTimeout(captions.timerHandle);
             if (captions.ele) captions.ele.innerHTML = label;
-            captions.msgs.push({ text: label, stamp: (new Date()).getTime() });
+            captions.msgs.push({ text: label, stamp: (new Date()).getTime() });      
         }
 
         if (email) {
@@ -1217,12 +1445,12 @@ var ofmeet = (function (ofm) {
         if (nick) {
             if (nick.innerHTML != "") {
                 if (APP.conference.getMyUserId() == id) {
-                    if (localDisplayName != APP.conference.getLocalDisplayName()) {
-                        localDisplayName = APP.conference.getLocalDisplayName();
+                    if (localDisplayName != getLocalDisplayName()) {
+                        localDisplayName = getLocalDisplayName();
                         changeAvatar(createAvatar(localDisplayName), AvatarType.INITIALS);
                     }
                 } else {
-                    if (id in participants && participants[id]._displayName != APP.conference.getParticipantDisplayName(id)) {
+                    if (id in participants && participants[id]._displayName != getParticipantDisplayName(id)) {
                         participants[id] = APP.conference.getParticipantById(id);
                         if (breakoutHost) {
                             breakoutHost.updateParticipant(id);
@@ -1247,7 +1475,7 @@ var ofmeet = (function (ofm) {
     }
 
     function handleMessage(msg) {		
-        if (!msg.getAttribute("type")) // alert message
+        if (msg.getAttribute("type") == 'headline') // alert message
         {
             const body = msg.querySelector('body');
 
@@ -1260,13 +1488,18 @@ var ofmeet = (function (ofm) {
         return true;
     }
 
-    function handleMucMessage(msg) {	
+    function handleMucMessage(msg) {
+       console.debug("handleMucMessage", getConferenceJid(), msg);		
         const participant = Strophe.getResourceFromJid(msg.getAttribute("from"));
 
         if (msg.getAttribute("type") == "error") {
             console.error(msg);
             return true;
         }
+		
+		if (!getConferenceJid()) {
+			setTimeout(() => {handleMucMessage(msg)}, 1000 );	// wait for jitsi-meet
+		}
 
         if (getConferenceJid() != Strophe.getBareJidFromJid(msg.getAttribute("from"))) {
             return true;
@@ -1292,6 +1525,9 @@ var ofmeet = (function (ofm) {
 				case 'push-room-properties':
 					handleRoomProperties(json);
 					break;
+				case 'plan-new-meeting':
+					handleMeetingInvitation(json);
+					break;					
                 default:
                     console.error("unknown MUC message");
                     return true;
@@ -1308,6 +1544,25 @@ var ofmeet = (function (ofm) {
 			console.debug("handleRoomProperties", key, json[key]);
 			interfaceConfig[key] = json[key];
         })		
+	}
+	
+	function handleMeetingInvitation(json) {
+		const message = json.sender + ' invites you to join the room ' + json.roomName + " on " + json.msgDate + " at " + json.msgTime;		
+		
+		const options = {
+			body: message,
+			icon: './icon.png',
+			data: json,
+			requireInteraction: true,
+			actions: [
+			  {action: 'accept', title: 'Accept', icon: './check-solid.png'},
+			  {action: 'reject', title: 'Reject', icon: './times-solid.png'}		  
+			]
+		};
+		
+		if (swRegistration) {
+			swRegistration.showNotification(interfaceConfig.APP_NAME, options);	
+		}
 	}
 
     //-------------------------------------------------------
@@ -1508,13 +1763,13 @@ var ofmeet = (function (ofm) {
         if (vcardAvatar) {
             changeAvatar(vcardAvatar, AvatarType.VCARD);
         } else {
-            changeAvatar(createAvatar(APP.conference.getLocalDisplayName()), AvatarType.INITIALS);
+            changeAvatar(createAvatar(getLocalDisplayName()), AvatarType.INITIALS);
         }
     }
 
     function changeInitialsAvatarColor() {
         getNickColor(true);
-        changeAvatar(createAvatar(APP.conference.getLocalDisplayName()), AvatarType.INITIALS);
+        changeAvatar(createAvatar(getLocalDisplayName()), AvatarType.INITIALS);
     }
 
     function createAvatar(nickname, width, height, font) {
@@ -2114,7 +2369,9 @@ var ofmeet = (function (ofm) {
         const ids = Object.getOwnPropertyNames(recordingVideoTrack);
 
         ids.forEach(function (id) {
-            html.push('\n<video id="' + id + '" controls preload="metadata" src="' + filenames[id] + '"><track default src="' + vttUrl + '"></video>');
+			if (filenames[id]) {
+				html.push('\n<video id="' + id + '" controls preload="metadata" src="' + filenames[id] + '"><track default src="' + vttUrl + '"></video>');
+			}
         });
 
         html.push('\n<script>');
@@ -2274,7 +2531,7 @@ var ofmeet = (function (ofm) {
     }
 
     function connectLiveStream(url, streamKey) {
-        const metadata = { user: APP.conference.getLocalDisplayName(), room: APP.conference.roomName, key: streamKey };
+        const metadata = { user: getLocalDisplayName(), room: APP.conference.roomName, key: streamKey };
         const ws = new WebSocket(url, [streamKey]);
 
         ws.onopen = (event) => {
@@ -2295,8 +2552,8 @@ var ofmeet = (function (ofm) {
     function startDesktopRecorder() {
         console.debug("custom_ofmeet.js startDesktopRecorder");
 
-        const recConstraints = { video: true, audio: { autoGainControl: false, echoCancellation: false, googAutoGainControl: false, noiseSuppression: false } };
-        const streamConstraints = { video: true, audio: true };
+        const recConstraints = { video: true, preferCurrentTab: true, audio: { autoGainControl: false, echoCancellation: false, googAutoGainControl: false, noiseSuppression: false } };
+        const streamConstraints = { video: true, audio: true, preferCurrentTab: true };
 
         if (config.ofmeetLiveStream) {
             if (!config.ofmeetStreamKey || config.ofmeetStreamKey.trim() === '') {
@@ -2958,7 +3215,7 @@ var ofmeet = (function (ofm) {
             console.debug("exitRoom", jid);
 
             const xmpp = APP.connection.xmpp.connection._stropheConn;
-            const to = Strophe.getBareJidFromJid(jid) + '/' + APP.conference.getLocalDisplayName();
+            const to = Strophe.getBareJidFromJid(jid) + '/' + getLocalDisplayName();
             xmpp.send($pres({ type: 'unavailable', to: to }));
         }
 
@@ -2966,7 +3223,7 @@ var ofmeet = (function (ofm) {
             console.debug("joinRoom", jid);
 
             const xmpp = APP.connection.xmpp.connection._stropheConn;
-            const to = Strophe.getBareJidFromJid(jid) + '/' + APP.conference.getLocalDisplayName();
+            const to = Strophe.getBareJidFromJid(jid) + '/' + getLocalDisplayName();
             xmpp.send($pres({ to: to }).c("x", { xmlns: Strophe.NS.MUC }));
         }
 
@@ -3310,7 +3567,7 @@ var ofmeet = (function (ofm) {
     function handleSubscription(subscription, keys) {
         console.debug('handleSubscription', subscription, keys);
 
-        const secret = btoa(JSON.stringify({ privateKey: keys.privateKey, publicKey: keys.publicKey, subscription: subscription }));
+        const secret = btoa(JSON.stringify({ privateKey: keys.privateKey, publicKey: keys.publicKey, subscription: subscription, lastModified: Date.now() }));
         window.WebPushLib.setVapidDetails('xmpp:' + APP.connection.xmpp.connection.domain, keys.publicKey, keys.privateKey);
         window.WebPushLib.selfSecret = secret;
 
@@ -3330,14 +3587,12 @@ var ofmeet = (function (ofm) {
                 const secret = handleElement.innerHTML;
                 const id = Strophe.getResourceFromJid(message.getAttribute("from"));
                 const participant = APP.conference.getParticipantById(id);
-                const myName = APP.conference.getLocalDisplayName();
-
-                console.debug('webpush contact', id, participant);
 
                 if (participant && participant._displayName) {
+                    console.debug('webpush contact', id, participant, participant._displayName);
                     storage.setItem('pade.webpush.' + participant._displayName, atob(secret));
-                } else if (APP.conference.getMyUserId() == id && myName) {
-                    storage.setItem('pade.webpush.' + myName, atob(secret));
+                } else if (APP.conference.getMyUserId() == id) {
+                    // storage.setItem('pade.webpush._self' , atob(secret)); // activate this line for debugging
                 }
 
             }
@@ -3365,11 +3620,12 @@ var ofmeet = (function (ofm) {
     function doContacts() {
         const template =
             '<div class="modal-header">' +
-            '    <h4 class="modal-title">Contacts Manager</h4>' +
+            '    <h4 class="modal-title">Contacts Manager</h4><p><br/></p>' +
+			'    <span style="float: right;"><b>Date: &nbsp;</b><input id="meeting-date" type="date"><input type="time" id="meeting-time" min="09:00" max="18:00"></span>' + 					
             '</div>' +
             '<div class="modal-body">' +
             '    <div class="pade-col-container meeting-contacts">' +
-            '   </div>' +
+            '   </div>' +	
             '</div>'
 
         if (!contactsModal) {
@@ -3389,20 +3645,24 @@ var ofmeet = (function (ofm) {
                         container.addEventListener("click", function (evt) {
                             evt.stopPropagation();
                             var parent = evt.target.parentNode;
-                            while (parent.tagName != "LI") {
-                                parent = parent.parentNode;
-                            }
-                            const contact = parent.getAttribute("data-contact");
-                            const email = parent.getAttribute("data-email");
-                            const ele = parent.querySelector(".meeting-icon");
-                            const selected = parent.querySelector(".meeting-icon > img");
-                            const image = email ? IMAGES.mail : IMAGES.contact;
 
-                            if (ele && contact) {
-                                console.debug("beforeOpen - click", contact, ele);
-                                const emailAttr = email ? 'data-email="' + email + '"' : '';
-                                if (ele) ele.innerHTML = selected ? image : '<img ' + emailAttr + ' data-contact="' + contact + '" width="24" height="24" src="./check-solid.png">';
-                            }
+							while (parent && parent.tagName != "LI") {
+								parent = parent.parentNode;
+							}	
+								
+							if (parent) {
+								const contact = parent.getAttribute("data-contact");
+								const email = parent.getAttribute("data-email");
+								const ele = parent.querySelector(".meeting-icon");
+								const selected = parent.querySelector(".meeting-icon > img");
+								const image = email ? IMAGES.mail : IMAGES.contact;
+
+								if (ele && contact) {
+									console.debug("beforeOpen - click", contact, ele);
+									const emailAttr = email ? 'data-email="' + email + '"' : '';
+									if (ele) ele.innerHTML = selected ? image : '<img ' + emailAttr + ' data-contact="' + contact + '" width="24" height="24" src="./check-solid.png">';
+								}
+							}
                         });
 
                         contactsModalOpened = true;
@@ -3428,12 +3688,21 @@ var ofmeet = (function (ofm) {
 
             contactsModal.addFooterBtn('Invite Selected', 'btn btn-danger tingle-btn tingle-btn--primary', function () {
                 const container = document.querySelector(".meeting-contacts");
-
+				const msgTime = document.querySelector("#meeting-time").value.trim();
+				const msgDate = document.querySelector("#meeting-date").value.trim();
+				
+				console.debug("addFooterBtn", msgTime, msgDate);
+				
                 container.querySelectorAll(".meeting-icon > img").forEach(function (icon) {
                     const contact = icon.getAttribute("data-contact");
-                    const message = APP.conference.getLocalDisplayName() + ' invites you to join the room ' + APP.conference.roomName + '.';
+					const sender = getLocalDisplayName();
+                    let message = sender + ' invites you to join the room ' + APP.conference.roomName;
+					
+					if (msgDate != "") {
+						message = message + " on " + msgDate + " at " + msgTime;
+					}
 
-                    sendWebPush(message, contact, function (name, error) {
+                    sendWebPush(message, sender, contact, msgTime, msgDate, function (name, error) {
                         let image = './delivered.png';
                         if (error) image = './times-solid.png';
                         icon.outerHTML = '<img data-contact="' + name + '" width="24" height="24" src="' + image + '">';
@@ -3455,7 +3724,7 @@ var ofmeet = (function (ofm) {
                     window.open(encodeURI(mailto));
                 }
             });
-
+			
             contactsModal.addFooterBtn('Reset Selected', 'btn btn-success btn-primary', function () {
                 const container = document.querySelector(".meeting-contacts");
 
@@ -3466,7 +3735,29 @@ var ofmeet = (function (ofm) {
 
             contactsModal.addFooterBtn('Close', 'btn btn-success btn-secondary', function () {
                 contactsModal.close();
-            });
+            });	
+
+
+            contactsModal.addFooterBtn('Send Invite to next Meeting', 'btn btn-primary', function () {
+                const container = document.querySelector(".meeting-contacts");
+				const msgTime = document.querySelector("#meeting-time").value.trim();
+				const msgDate = document.querySelector("#meeting-date").value.trim();
+				
+				if (msgTime == "" || msgDate == "") {
+					APP.UI.messageHandler.showError({ title: "Next Meeting Invite Error", description: "Date or Time missing", hideErrorSupportLink: true });
+					return;
+				}
+				
+				const action = 'plan-new-meeting';
+				const sender = getLocalDisplayName();
+				const url = location.href;
+				const roomName = APP.conference.roomName;			
+				
+				const json = {action, sender, url, roomName, msgDate, msgTime};	
+				const xmpp = APP.connection.xmpp.connection._stropheConn;
+				xmpp.send($msg({ type: 'groupchat', to: getConferenceJid() }).c('json', { xmlns: 'urn:xmpp:json:0' }).t(JSON.stringify(json)));				
+
+            });				
 
             contactsModal.setContent(template);
         }
@@ -3510,12 +3801,12 @@ var ofmeet = (function (ofm) {
         }
     }
 
-    function sendWebPush(body, name, callback) {
-        console.debug('sendWebPush', body, name);
+    function sendWebPush(body, sender, name, time, date, callback) {
+        console.debug('sendWebPush', body, name, time, date);
 
         if (storage.getItem('pade.webpush.' + name)) {
             const secret = JSON.parse(storage.getItem('pade.webpush.' + name));
-            const payload = { msgSubject: interfaceConfig.APP_NAME, msgBody: body, msgType: 'meeting', url: location.href };
+            const payload = { msgSubject: interfaceConfig.APP_NAME, msgBody: body, msgType: 'meeting', url: location.href, msgTime: time, msgDate: date, name, sender, roomName: APP.conference.roomName};
 			const data = {payload, publicKey: secret.publicKey, privateKey: secret.privateKey, subscription: secret.subscription};
 			const host = config.bosh.split("/")[2];
 			
@@ -3600,7 +3891,7 @@ var ofmeet = (function (ofm) {
             console.debug("/webauthn/register/start", credentialCreationOptions);
 
             // confirm webauthn register after first step because second step fails with a re-register
-            localStorage.setItem("ofmeet.webauthn.username", username);
+            storage.setItem("ofmeet.webauthn.username", username);
 
             if (credentialCreationOptions.excludeCredentials) {
                 credentialCreationOptions.excludeCredentials.forEach(function (listItem) {
@@ -3722,6 +4013,8 @@ var ofmeet = (function (ofm) {
 
     ofm.recording = false;
 	ofm.getAllParticipants = getAllParticipants;
+	ofm.getLocalDisplayName = getLocalDisplayName;
+	ofm.getParticipantDisplayName = getParticipantDisplayName;
 
     return ofm;
 

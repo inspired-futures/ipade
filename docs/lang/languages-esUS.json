@@ -1,11 +1,11 @@
 {
-    "en": "Inglés",
     "af": "Africano",
     "bg": "Búlgaro",
     "ca": "Catalán",
     "cs": "Checo",
     "de": "Alemán",
     "el": "Griego",
+    "en": "Inglés",
     "enGB": "Inglés",
     "eo": "Esperanto",
     "es": "Español",
@@ -28,6 +28,7 @@
     "sk": "Eslovaco",
     "sv": "Sueco",
     "tr": "Turco",
+    "uk": "Ucraniano",
     "vi": "Vietnamita",
     "zhCN": "Chino (China)",
     "zhTW": "Chino (Taiwan)"

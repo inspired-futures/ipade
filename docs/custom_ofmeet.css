@@ -7,28 +7,34 @@
   }
 }
 
-/*
- * 20200427/G.Jaekel@DNB.DE   make raisehand more noticeable
- * 20200512/G.Jaekel@DNB.DE   make it even a bit more noticeable, humans seems more sensible to motion ...
- */
+.fc-timegrid-slot-label-cushion, .fc-timegrid-axis-cushion {
+	color: black;
+}
+
+/* <<< 20220409/G.Jaekel@DNB.DE make raisehand more noticable */
+div.jss3, /* info-box */
+div.jss33, /* participats window & filmstrip */
+div.indicators div:not(.jitsi-icon-default) { /* participant plane */
+  animation-name: raisehand;
+  animation-duration: 5s;
+  animation-direction: alternate;
+  animation-delay: 30s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in;
+}
+
 @keyframes raisehand {
   from {
-    background-color: #165ecc;
+    background-color: #FFD600;
   }
 
   to {
-    background-color: red;
-    transform: scale(1.1);
+    background-color: #FF6000;
+    transform: scale(1.2);
   }
 }
 
-.raisehandindicator {
-  animation-name: raisehand;
-  animation-duration: 2s;
-  animation-direction: alternate;
-  animation-delay: 5s;
-  animation-iteration-count: infinite;
-}
+/* >>> */
 
 .speaker-room-button {
   border: 0;
@@ -61,42 +67,6 @@
   flex-wrap: wrap;
 }
 
-/*
- * 20210102/G.Jaekel@DNB.DE     make "green" (good) connection state indicator hidden after a while to keep display clean
- *
- * to restart an animation on hover, use two exact clones with a different name,  see https://css-tricks.com/restart-css-animation/
- */
-@keyframes status-high-1 {
-  from {}
-
-  to {
-    opacity: 0%;
-    filter: opacity(0%);
-  }
-}
-
-@keyframes status-high-2 {
-  from {}
-
-  to {
-    opacity: 0%;
-    filter: opacity(0%);
-  }
-}
-
-.connection-indicator.status-high {
-  animation-name: status-high-1;
-  animation-delay: 20s;
-  animation-duration: 2s;
-  animation-fill-mode: forwards;
-}
-
-.connection-indicator.status-high:hover {
-  animation-name: status-high-2;
-  animation-delay: 20s;
-  animation-duration: 2s;
-  animation-fill-mode: forwards;
-}
 
 /*
  * 20210104/gj  Allow the Conferences Display at the Welcome Page to show more entires
@@ -204,6 +174,12 @@
   transform: translateX(calc(-100% + 48px));
 }
 
+.ofmeet-toolbox-menu ul{
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
 .button-group-left .ofmeet-toolbox-menu {
   left: 0;
 }
@@ -233,6 +209,7 @@
   line-height: 24px;
   padding: 8px 16px;
   text-align: left;
+  white-space: nowrap;
 }
 
 .ofmeet-toolbox-tile-menu .ofmeet-toolbox-menu-item {
@@ -300,4 +277,9 @@
 
 .tags-modal .tingle-modal-box {
   width: 600px;
+}
+
+/* avoid the info head line to overlay the participant widnow menu icons (#397) */
+.details-container {
+  top: 24px; /* instead of 0px */
 }

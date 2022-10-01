@@ -1,11 +1,10 @@
 {
-    "en": "Angleščina",
     "af": "Afrikanščina",
-    "az": "Azerbajdanščina",
     "bg": "Bolgarščina",
     "cs": "Češčina",
     "de": "Nemščina",
     "el": "Grščina",
+    "en": "Angleščina",
     "eo": "Esperanto",
     "es": "Španščina",
     "fr": "Francoščina",
@@ -22,6 +21,7 @@
     "sl": "Slovenščina",
     "sv": "Švedščina",
     "tr": "Turščina",
+    "uk": "Ukrajinščina",
     "vi": "Vietnamščina",
     "zhCN": "kitajščina (poenostavljena)"
 }

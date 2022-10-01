@@ -1,5 +1,4 @@
 {
-    "en": "Anglų",
     "af": "Afrikanų",
     "bg": "Bulgarų",
     "ca": "Katalanų",
@@ -7,6 +6,7 @@
     "da": "Danų",
     "de": "Vokiečių",
     "el": "Graikų",
+    "en": "Anglų",
     "enGB": "Anglų (Britų)",
     "eo": "Esperanto",
     "es": "Ispanų",
@@ -20,8 +20,8 @@
     "hy": "Armėnų",
     "it": "Italų",
     "ja": "Japonų",
-    "lt": "Lietuvių",
     "ko": "Korėjiečių",
+    "lt": "Lietuvių",
     "nl": "Olandų",
     "oc": "Oksitanų",
     "pl": "Lenkų",
@@ -29,6 +29,7 @@
     "ru": "Rusų",
     "sv": "Švedų",
     "tr": "Turkų",
+    "uk": "Ukrainiečių",
     "vi": "Vietnamiečių",
     "zhCN": "Kinų (China)",
     "zhTW": "Kinų (Taivanas)"
